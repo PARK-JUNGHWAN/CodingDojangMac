@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="loginmapper">
+
+	<insert id="insertCustomer" parameterType="javagers.kdw.Customer_info" >
+		insert into customer_info values(#{customer_name},#{customer_id},
+			#{customer_pwd},#{customer_birth},#{customer_addr},#{customer_gen},#{customer_num}
+			,#{customer_pnt})
+		
+			
+	</insert>
+	
+	
+	<update id="updateCustomerInfo" parameterType="javagers.kdw.CustomerInfo">
+		update Customer_info set name=#{name}, customer_id=#{customer_id},
+			customer_pwd=#{customer_pwd}, customer_birth=#{customer_birth} ,customer_addr=#{customer_addr}
+		where code = #{code}
+	</update>
+	
+	
+</mapper>
+
+
+
+
+
+
+
+
