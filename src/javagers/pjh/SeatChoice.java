@@ -15,13 +15,13 @@ import javax.swing.JPanel;
 
 public class SeatChoice extends JFrame {
 
-	SeatChoicePanel one;
+	SeatChoicePan one;
 
 	SeatChoice() {
 
 		this.setLayout(new BorderLayout());
 
-		one = new SeatChoicePanel();
+		one = new SeatChoicePan();
 
 		this.add("North", new JPanel().add(new JButton("SCREEN")));
 		this.add("Center", one);
@@ -41,12 +41,12 @@ public class SeatChoice extends JFrame {
 
 class SeatChoicePan extends JPanel {
 
-	SeatChoicePan1 one;
+	SeatChoicePan3 one;
 
 	SeatChoicePan() {
 		this.setLayout(new BorderLayout());
 
-		one = new SeatChoicePan1();
+		one = new SeatChoicePan3();
 
 		this.add("North", new JPanel().add(new JLabel(" \r\n ← \r\n EXIT")));
 		this.add("Center", one);
@@ -54,7 +54,7 @@ class SeatChoicePan extends JPanel {
 
 }
 
-class SeatChoicePan1 extends JPanel implements ActionListener{//인원수를 받아와야 함
+class SeatChoicePan3 extends JPanel implements ActionListener{//인원수를 받아와야 함
 
 	String temp;
 	String[] alph = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J"};
@@ -67,7 +67,7 @@ class SeatChoicePan1 extends JPanel implements ActionListener{//인원수를 받
 	int maxNumber = 3; // 숫자는 인원수 받음
 	int number = 0;
 
-	SeatChoicePan1() {
+	SeatChoicePan3() {
 		this.setLayout(new GridLayout(10, 17));
 		button = new JButton[170]; 
 		int j = 0;

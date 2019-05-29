@@ -21,14 +21,16 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 public class ReservationSeatBoard extends JFrame {
 
-	int reserve_people, reserve_price, reserve_seat, reserve_screen, reserve_round, reserve_title;
+	int reserve_people, reserve_price, reserve_seat, reserve_screen, reserve_round, reserve_title, reserve_mnum;
 	Date reserve_date; int dataNum;
-	List<ScreenInfo> list;
+	List<ScreenInfo> list; List<String> seatList = new ArrayList<>(160);
+	// 다음 패널에 정보를 보낼때는 최종 인원수 만큼만 좌석 정보에서 리스트에서 읽어옴
 
 	ReservationSeatBoardPanSeat north;
 	ReservationSeatBoardPanDate west;
@@ -36,27 +38,43 @@ public class ReservationSeatBoard extends JFrame {
 	JPanel south;
 	ReservationSeatBoardPan2 south1;
 	ReservationSeatBoardPan3 south2;
+	
+	JButton bt;
 
 	ReservationSeatBoard() {
 
 		this.setLayout(new BorderLayout());
-
+		
+		CRUDprocess cp = new CRUDprocess(); //생성시 db내 상영관 정보 리스트 불러옴
+		list = new ArrayList<>();
+		list = cp.selectScreenInfo();
+		dataNum = list.size();
+		
 		north = new ReservationSeatBoardPanSeat(this);
 		west = new ReservationSeatBoardPanDate(this);
-		center = new SeatChoicePanel();
+		center = new SeatChoicePanel(this); 
+		//center - 비활성화할 좌석 정보 받아야 함: where 영화넘버, 날짜, 회차, (좌석 정보 배열로)
+		//최대 인원수 
+		
 		south = new JPanel();
 		south.setLayout(new GridLayout(1, 3));
 		south1 = new ReservationSeatBoardPan2();
 		south2 = new ReservationSeatBoardPan3(this);
 		south.add(south1);
 		south.add(south2);
-		south.add(new JPanel().add(new JButton("다음")));
-		
-		CRUDprocess cp = new CRUDprocess(); //생성시 db내 상영관 정보 리스트 불러옴
-		list = new ArrayList<>();
-		list = cp.selectScreenInfo();
-		dataNum = list.size();
+		bt = new JButton("다음"); bt.addActionListener(new ActionListener() {
 
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// 다음 버튼을 눌렀을때 모든 정보 다음 패널에 전송
+				// 영화명, 좌석 list, 시작시간, 상영관 - 클래스로 전송?
+				// 상태가 비회원일 경우에는 다이어로그 오픈 비회원 로그인
+				// 리저베이션컨펌 패널 오픈
+			}
+			
+		});
+		south.add(new JPanel().add(bt));
+		
 		this.add("North", north);
 		this.add("West", west);
 		this.add("Center", center);
@@ -105,7 +123,6 @@ class ReservationSeatBoardPanSeatNumber extends JPanel {// 노스 2번째 상단
 	ReservationSeatBoardPanSeatNumber(ReservationSeatBoard rsb) {
 		
 		this.rsb = rsb;
-		rsb.dataNum = 0;
 
 		one = new ReservationSeatBoardPanSeatNumberPan(rsb);
 
@@ -116,27 +133,25 @@ class ReservationSeatBoardPanSeatNumber extends JPanel {// 노스 2번째 상단
 	}
 }
 
-class ReservationSeatBoardPanSeatNumberPan extends JPanel {// 노스 마지막
+class ReservationSeatBoardPanSeatNumberPan extends JPanel implements ActionListener{// 노스 마지막
 	ReservationSeatBoard rsb;
 	JButton[] button; 
 	JLabel[] label;
 	String[] str;
-	String[] number = { "10석", "12석", "14석", "16석", "18석" };
+	String[] number;
 	List<ScreenInfo> list;
 	int j = 0;
 
 	ReservationSeatBoardPanSeatNumberPan(ReservationSeatBoard rsb) {
 		
-		this.rsb = rsb; this.list = rsb.list;
-//		CRUDprocess cp = new CRUDprocess();
-//		list = new ArrayList<>();
-//		list = cp.selectScreenInfo();
-//		len = list.size();
+		this.rsb = rsb; 
+		this.list = rsb.list;
+		
 		str = new String[rsb.dataNum];
+		number = new String[rsb.dataNum];
 		
 		for(ScreenInfo i:list) {
 			str[j] =i.screen_begin;
-			System.out.println(str[j]);
 			j++;
 		}
 		
@@ -146,9 +161,14 @@ class ReservationSeatBoardPanSeatNumberPan extends JPanel {// 노스 마지막
 		for (int i = 0; i < rsb.dataNum; i++) {
 			button[i] = new JButton(str[i] + "");
 			label[i] = new JLabel(number[i] + "");
-			this.add(button[i]);
+			this.add(button[i]); button[i].addActionListener(this);
 			this.add(label[i]);
 		}
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {//좌석 선택 패널 활성화
+		rsb.center.setVisible(true);
 	}
 }
 
@@ -219,10 +239,8 @@ class ReservationSeatBoardPanTime extends JPanel implements ListSelectionListene
 
 		today = new GregorianCalendar();
 		int date = today.get(Calendar.DATE);
-		System.out.println(date);
 		int dayOfWeek = today.get(Calendar.DAY_OF_WEEK);
 		dayOfWeek = dayOfWeek - 1;
-		System.out.println(dayOfWeek);
 
 		str = new String[7];
 		dateNumber = new String[7];
@@ -250,7 +268,7 @@ class ReservationSeatBoardPanTime extends JPanel implements ListSelectionListene
 	}
 }
 
-class ReservationSeatBoardPan2 extends JPanel {// 사우스 그리드 1번째
+class ReservationSeatBoardPan2 extends JPanel implements ItemListener{// 사우스 그리드 1번째
 
 	JComboBox[] combo;
 	JLabel[] label;
@@ -276,12 +294,21 @@ class ReservationSeatBoardPan2 extends JPanel {// 사우스 그리드 1번째
 		this.add(combo[2]);
 
 	}
+
+	@Override
+	public void itemStateChanged(ItemEvent e) {
+		// 이걸 클릭하면 시트초이스 팬의 최대 클릭 인원수 변경
+		// 일반+청소년 
+		
+	}
 }
 
 class ReservationSeatBoardPan3 extends JPanel {// 사우스 그리드 2번째, 인원, 금액
+	//rsb.south2
 
 	ReservationSeatBoard rsb;
-	JLabel people, peopleText, price, priceText;
+	JLabel people, price;
+	JTextField peopleText, priceText;
 	int peopleNum, priceNum;
 
 	ReservationSeatBoardPan3(ReservationSeatBoard rsb) {
@@ -290,9 +317,9 @@ class ReservationSeatBoardPan3 extends JPanel {// 사우스 그리드 2번째, �
 		peopleNum = rsb.reserve_people;
 		priceNum = rsb.reserve_price;
 		people = new JLabel("  인원:   ");
-		peopleText = new JLabel(peopleNum + "");
+		peopleText = new JTextField(peopleNum + "");
 		price = new JLabel("  가격:   ");
-		priceText = new JLabel(priceNum + "");
+		priceText = new JTextField(priceNum + "");
 		this.add(people);
 		this.add(peopleText);
 		this.add(price);
