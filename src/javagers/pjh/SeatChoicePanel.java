@@ -23,7 +23,7 @@ public class SeatChoicePanel extends JPanel {
 		rsb = rsb;
 		this.setLayout(new BorderLayout());
 
-		one = new SeatChoicePan0(this);
+		one = new SeatChoicePan0(rsb);
 
 		this.add("North", new JPanel().add(new JButton("SCREEN")));
 		this.add("Center", one);
@@ -36,14 +36,15 @@ class SeatChoicePan0 extends JPanel {
 
 	SeatChoicePan1 one;
 	SeatChoicePanel scp;
+	ReservationSeatBoard rsb;
 
-	SeatChoicePan0(SeatChoicePanel scp) {
+	SeatChoicePan0(ReservationSeatBoard rsb) {
 		
-		scp=scp;
+		this.rsb = rsb;
 		
 		this.setLayout(new BorderLayout());
 
-		one = new SeatChoicePan1(scp);
+		one = new SeatChoicePan1(rsb);
 
 		this.add("North", new JPanel().add(new JLabel(" \r\n ← \r\n EXIT")));
 		this.add("Center", one);
@@ -53,6 +54,7 @@ class SeatChoicePan0 extends JPanel {
 
 class SeatChoicePan1 extends JPanel implements ActionListener{//인원수를 받아와야 함
 	
+	ReservationSeatBoard rsb;
 	SeatChoicePanel scp;
 	String temp;
 	String[] alph = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J"};
@@ -65,8 +67,8 @@ class SeatChoicePan1 extends JPanel implements ActionListener{//인원수를 받
 	int maxNumber = 3; // 숫자는 인원수 받음
 	int number = 0; int price = 0;
 
-	SeatChoicePan1(SeatChoicePanel scp) {
-		scp=scp;
+	SeatChoicePan1(ReservationSeatBoard rsb) {
+		this.rsb = rsb;
 		
 		this.setLayout(new GridLayout(10, 17));
 		button = new JButton[170]; 
@@ -127,11 +129,9 @@ class SeatChoicePan1 extends JPanel implements ActionListener{//인원수를 받
 		if(bt.getBackground() != Color.RED && number < maxNumber) { // 한번 클릭하면 빨간색
 			bt.setBackground(Color.RED);
 			number++; 
-			System.out.println(number);
-			scp.rsb.south2.peopleText.setText(""); // 사우스 2번 패널 인원수 변경
+			rsb.south2.peopleText.setText(number+""); // 사우스 2번 패널 인원수 변경
 			price = number * 10000;
-			System.out.println(price);
-//			scp.rsb.south2.peopleNum = price; // 사우스 2번 패널 금액수 변경
+			rsb.south2.priceText.setText(price+""); // 사우스 2번 패널 금액수 변경
 			
 			//사우스 2번 패널 리로드
 //			scp.rsb.south.add(scp.rsb.south2);
@@ -148,7 +148,10 @@ class SeatChoicePan1 extends JPanel implements ActionListener{//인원수를 받
 				bt.setBackground(Color.GREEN);
 			}
 			number--;
-			System.out.println(number);
+			rsb.south2.peopleText.setText(number+""); // 사우스 2번 패널 인원수 변경
+			price = number * 10000;
+			rsb.south2.priceText.setText(price+""); // 사우스 2번 패널 금액수 변경
+
 			ButtonPoint temp = new ButtonPoint(bt.getLocation().x, bt.getLocation().y);
 			templist.remove(temp);
 		} else {

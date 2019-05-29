@@ -14,5 +14,6 @@ public class ReserveInfo {
 	int reserve_people;
 	int reserve_price;
 	String reserve_seat;
+	String reserve_mnum;
 
 }

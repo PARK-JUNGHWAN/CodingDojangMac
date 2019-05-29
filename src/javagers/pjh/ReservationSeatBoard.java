@@ -25,7 +25,9 @@ import javax.swing.JTextField;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-public class ReservationSeatBoard extends JFrame {
+public class ReservationSeatBoard extends JPanel {
+	
+	ReservationMovie rm;
 
 	int reserve_people, reserve_price, reserve_seat, reserve_screen, reserve_round, reserve_title, reserve_mnum;
 	Date reserve_date; int dataNum;
@@ -41,7 +43,9 @@ public class ReservationSeatBoard extends JFrame {
 	
 	JButton bt;
 
-	ReservationSeatBoard() {
+	ReservationSeatBoard(ReservationMovie rm) {
+		
+		this.rm = rm;
 
 		this.setLayout(new BorderLayout());
 		
@@ -59,7 +63,7 @@ public class ReservationSeatBoard extends JFrame {
 		south = new JPanel();
 		south.setLayout(new GridLayout(1, 3));
 		south1 = new ReservationSeatBoardPan2();
-		south2 = new ReservationSeatBoardPan3(this);
+		south2 = new ReservationSeatBoardPan3();
 		south.add(south1);
 		south.add(south2);
 		bt = new JButton("다음"); bt.addActionListener(new ActionListener() {
@@ -70,6 +74,7 @@ public class ReservationSeatBoard extends JFrame {
 				// 영화명, 좌석 list, 시작시간, 상영관 - 클래스로 전송?
 				// 상태가 비회원일 경우에는 다이어로그 오픈 비회원 로그인
 				// 리저베이션컨펌 패널 오픈
+				System.out.println(rm.reservationMoviePan.movieName);
 			}
 			
 		});
@@ -82,14 +87,15 @@ public class ReservationSeatBoard extends JFrame {
 
 		center.setVisible(false); // 좌석 선택 감춤
 		north.one.one.setVisible(false); // 시간 선택 감춤
+//		south2.setVisible(false);
 
-		this.setBounds(0, 0, 1200, 800);
-		this.setVisible(true);
-		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//		this.setBounds(0, 0, 1200, 800);
+//		this.setVisible(true);
+//		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 
 	public static void main(String[] args) {
-		new ReservationSeatBoard();
+//		new ReservationSeatBoard();
 
 	}
 
@@ -306,20 +312,17 @@ class ReservationSeatBoardPan2 extends JPanel implements ItemListener{// 사우�
 class ReservationSeatBoardPan3 extends JPanel {// 사우스 그리드 2번째, 인원, 금액
 	//rsb.south2
 
-	ReservationSeatBoard rsb;
 	JLabel people, price;
 	JTextField peopleText, priceText;
-	int peopleNum, priceNum;
 
-	ReservationSeatBoardPan3(ReservationSeatBoard rsb) {
-		this.rsb = rsb;
+	ReservationSeatBoardPan3() {
+
 		this.setLayout(new GridLayout(2, 2));
-		peopleNum = rsb.reserve_people;
-		priceNum = rsb.reserve_price;
+	
 		people = new JLabel("  인원:   ");
-		peopleText = new JTextField(peopleNum + "");
+		peopleText = new JTextField("0"); peopleText.setEditable(false);
 		price = new JLabel("  가격:   ");
-		priceText = new JTextField(priceNum + "");
+		priceText = new JTextField("0"); priceText.setEditable(false);
 		this.add(people);
 		this.add(peopleText);
 		this.add(price);
