@@ -30,9 +30,12 @@ public class ReservationSeatBoard extends JPanel {
 	ReservationMovie rm;
 
 	int reserve_people, reserve_price, reserve_seat, reserve_screen, reserve_round, reserve_title, reserve_mnum;
-	Date reserve_date; int dataNum;
+	Date reserve_date; 
+//	int dataNum;
 	List<ScreenInfo> list; List<String> seatList = new ArrayList<>(160);
 	// 다음 패널에 정보를 보낼때는 최종 인원수 만큼만 좌석 정보에서 리스트에서 읽어옴
+	
+	String movieName = "";
 
 	ReservationSeatBoardPanSeat north;
 	ReservationSeatBoardPanDate west;
@@ -52,7 +55,7 @@ public class ReservationSeatBoard extends JPanel {
 		CRUDprocess cp = new CRUDprocess(); //생성시 db내 상영관 정보 리스트 불러옴
 		list = new ArrayList<>();
 		list = cp.selectScreenInfo();
-		dataNum = list.size();
+//		dataNum = list.size();
 		
 		north = new ReservationSeatBoardPanSeat(this);
 		west = new ReservationSeatBoardPanDate(this);
@@ -62,7 +65,7 @@ public class ReservationSeatBoard extends JPanel {
 		
 		south = new JPanel();
 		south.setLayout(new GridLayout(1, 3));
-		south1 = new ReservationSeatBoardPan2();
+		south1 = new ReservationSeatBoardPan2(this);
 		south2 = new ReservationSeatBoardPan3();
 		south.add(south1);
 		south.add(south2);
@@ -86,7 +89,7 @@ public class ReservationSeatBoard extends JPanel {
 		this.add("South", south);
 
 		center.setVisible(false); // 좌석 선택 감춤
-		north.one.one.setVisible(false); // 시간 선택 감춤
+//		north.one.one.setVisible(false); // 시간 선택 감춤
 //		south2.setVisible(false);
 
 //		this.setBounds(0, 0, 1200, 800);
@@ -112,10 +115,10 @@ class ReservationSeatBoardPanSeat extends JPanel { // 노스 최상단, 메인
 		this.rsb = rsb;
 		this.setLayout(new BorderLayout());
 
-		one = new ReservationSeatBoardPanSeatNumber(rsb);
-
 		this.add("North", new JPanel().add(new JButton("시간")));
-		this.add("Center", one);
+		
+//		one = new ReservationSeatBoardPanSeatNumber(rsb);
+//		this.add("Center", one);
 
 	}
 
@@ -139,34 +142,86 @@ class ReservationSeatBoardPanSeatNumber extends JPanel {// 노스 2번째 상단
 	}
 }
 
-class ReservationSeatBoardPanSeatNumberPan extends JPanel implements ActionListener{// 노스 마지막
+class ReservationSeatBoardPanSeatNumberPan extends JPanel implements ActionListener{
+	// 노스 마지막, 상영시간 , 잔여좌석수 출력
 	ReservationSeatBoard rsb;
 	JButton[] button; 
-	JLabel[] label;
+	JLabel[] label; // 좌석 표시 라벨
+	String[] seatNumber; // 좌석 정보 저장 배열 
+	StringBuffer seat;
 	String[] str;
 	String[] number;
-	List<ScreenInfo> list;
-	int j = 0;
+	
+	int remainSeat, inSeat; int maxSeat = 160;
+	
+	List<ScreenInfo> list; List<ReserveInfo> Relist;
+	int j=0; int t=0;
+	String movieName;
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		ReservationSeatBoardPanSeatNumberPan other = (ReservationSeatBoardPanSeatNumberPan) obj;
+		if (movieName == null) {
+			if (other.movieName != null)
+				return false;
+		} else if (!movieName.equals(other.movieName))
+			return false;
+		return true;
+	}
 
 	ReservationSeatBoardPanSeatNumberPan(ReservationSeatBoard rsb) {
 		
-		this.rsb = rsb; 
+		this.rsb = rsb;
 		this.list = rsb.list;
 		
-		str = new String[rsb.dataNum];
-		number = new String[rsb.dataNum];
+		// 잔여 좌석 계산
+		Relist = new ArrayList<>();
+		CRUDprocess cp = new CRUDprocess();
+		Relist = cp.selectReserveInfo();
+		//리스트에서 좌석 정보를 배열에 저장하는데 ,를 구분하며 null 값은 넣지 않는다.
+		seatNumber = new String[Relist.size()];
+		seat = new StringBuffer("");
+		for(ReserveInfo i:Relist) {
+			if(i != null) {
+				
+				if(i.reserve_seat.contains(",")) {
+					i.reserve_seat.replace(", ","");
+					seat.append(i.reserve_seat);
+					System.out.println("1");
+				} else {
+					seat.append(i.reserve_seat);
+				}
+			}
+		}
+		System.out.println(seat);
+		
+		
+		str = new String[list.size()];
 		
 		for(ScreenInfo i:list) {
-			str[j] =i.screen_begin;
-			j++;
+			
+			movieName = i.screen_mname;
+			
+			if(movieName.equals(rsb.movieName)) { //초이스 영화명과 같으면
+				str[j] =i.screen_begin;
+				j++;
+			}
 		}
 		
-		button = new JButton[rsb.dataNum];
-		label = new JLabel[rsb.dataNum];
+		number = new String[j];
+		
+		button = new JButton[j];
+		label = new JLabel[j];
 
-		for (int i = 0; i < rsb.dataNum; i++) {
-			button[i] = new JButton(str[i] + "");
-			label[i] = new JLabel(number[i] + "");
+		for (int i = 0; i < j; i++) {
+			button[i] = new JButton(str[i] + ""); // 시간 표시 버튼 생성 및 최초 입력
+			label[i] = new JLabel(number[i] + ""); // 좌석 표시 라벨 생성
 			this.add(button[i]); button[i].addActionListener(this);
 			this.add(label[i]);
 		}
@@ -275,29 +330,34 @@ class ReservationSeatBoardPanTime extends JPanel implements ListSelectionListene
 }
 
 class ReservationSeatBoardPan2 extends JPanel implements ItemListener{// 사우스 그리드 1번째
-
+	
+	ReservationSeatBoard rsb;
 	JComboBox[] combo;
 	JLabel[] label;
 	String[] str = { "0", "1", "2", "3", "4", "5", "6", "7", "8" };
+	int adultNumber, youngNumber, totalNumber;
 
-	ReservationSeatBoardPan2() {
-		combo = new JComboBox[3];
-		label = new JLabel[3];
+	ReservationSeatBoardPan2(ReservationSeatBoard rsb) {
+		
+		this.rsb = rsb;
+		
+		combo = new JComboBox[2];
+		label = new JLabel[2];
 
-		combo[0] = new JComboBox(str);
-		combo[1] = new JComboBox(str);
-		combo[2] = new JComboBox(str);
+		combo[0] = new JComboBox(str); combo[0].addItemListener(this);
+		combo[1] = new JComboBox(str); combo[1].addItemListener(this);
+//		combo[2] = new JComboBox(str);
 		label[0] = new JLabel("일반");
-		label[1] = new JLabel("청소년");
-		label[2] = new JLabel("우대");
+		label[1] = new JLabel("청소년"); 
+//		label[2] = new JLabel("우대");
 
-		this.setLayout(new GridLayout(3, 2));
-		this.add(label[0]);
+		this.setLayout(new GridLayout(2, 2));
+		this.add(label[0]); 
 		this.add(combo[0]);
 		this.add(label[1]);
 		this.add(combo[1]);
-		this.add(label[2]);
-		this.add(combo[2]);
+//		this.add(label[2]);
+//		this.add(combo[2]);
 
 	}
 
@@ -306,6 +366,12 @@ class ReservationSeatBoardPan2 extends JPanel implements ItemListener{// 사우�
 		// 이걸 클릭하면 시트초이스 팬의 최대 클릭 인원수 변경
 		// 일반+청소년 
 		
+		adultNumber = Integer.parseInt(combo[0].getSelectedItem().toString());
+		youngNumber = Integer.parseInt(combo[1].getSelectedItem().toString());
+		
+		totalNumber = adultNumber + youngNumber;
+		
+		rsb.center.one.one.maxNumber = totalNumber;
 	}
 }
 

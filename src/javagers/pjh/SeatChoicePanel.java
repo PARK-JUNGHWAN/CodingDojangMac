@@ -64,8 +64,8 @@ class SeatChoicePan1 extends JPanel implements ActionListener{//인원수를 받
 
 	JButton[] button;
 	
-	int maxNumber = 3; // 숫자는 인원수 받음
-	int number = 0; int price = 0;
+	int maxNumber; // 숫자는 인원수 받음
+	int number, price;
 
 	SeatChoicePan1(ReservationSeatBoard rsb) {
 		this.rsb = rsb;
