@@ -12,6 +12,10 @@
 		select * from SCREEN_INFO
 	</select>
 	
+	<select id="selectMovieInfo" resultType="javagers.pjh.MovieInfo">
+		select * from MOVIE_INFO
+	</select>
+	
 	
 </mapper>
 

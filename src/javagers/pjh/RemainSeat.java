@@ -1,5 +1,6 @@
 package javagers.pjh;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class RemainSeat {
@@ -7,31 +8,54 @@ public class RemainSeat {
 	// RSB가 실행될 때 상영관 정보를 읽어와서 순서대로 이 클래스를 리스트에 저장
 	// 라벨에 한번에 다 입력해놓음 - 갱신은 예매현황을 새로 눌러야 가
 	
+	List<ReserveInfo> list;
 	int remainNumber, countNumber, screen, round;
 	int maxNumber = 160;
-	static int[] remainSeat;
+	int[] remainSeat;
+	String str; // 리스트에 있는 좌석 정보를 저장할 문자열
+	
+	RemainSeat(int x, int y){
+		
+		CRUDprocess cp = new CRUDprocess();
+		list = new ArrayList();
+		list = cp.selectReserveInfo();
+		
+		cal(x, y);
+		
+		countNumber = remainSeat.length;
+		remainNumber = maxNumber - countNumber;
+		
+	}
 
-	public static void main(String[] args) {
+	public void cal(int screen, int round) {
+		// list 순차검색해 있는 좌석을 새로운 배열에 입력
+		// 입력이 끝나면 좌석수 계산해서 입력
+		// 입력받는 상영관과 회차는 바로 저장: 1관 1회의 남은 좌석 저장하는 클래
+		// 좌석은 무조건 3자리씩 입력하고 읽어오
+
+		this.screen = screen;
+		this.round = round;
+
+		str = "";
+
+		for (ReserveInfo i : list) {
+			str = str + i.reserve_seat;
+		}
 		
-		String[] temp = new String[] {"A01","A02A03"};
-		
-		String str = new String("");
-		str = str+temp[0]; 
-		str = str+temp[1];
-		
-		int i = 0; int j=0; int r = 0;
-		
-		remainSeat = new int[3];
-		
-		while(i<str.length()) {
+		remainSeat = new int[str.length()];
+
+		String temp = "";
+		String temp1 = "";
+		int j = 0;
+
+		for (int i = 0; i < str.length()/3; i++) {
+			temp = str.substring(3*i, 3*i+1);
+			int r=0;
 			
-			String s = str.substring(0, 0);
-			
-			switch(s) {
+			switch(temp) {
 			
 			case "A": 
 				r=1;
-				System.out.println(r);
 				break;
 			case "B": 
 			
@@ -62,37 +86,13 @@ public class RemainSeat {
 				break;
 			}
 			
-			int t = Integer.parseInt(str.substring(i+1, i+2));
+			temp1 = str.substring(1+i*3, 3+3*i);
 			
-			System.out.println(t);
-			
-			remainSeat[j] = r+t;
-			
-			System.out.println(remainSeat[j]);
-			
-			i= i+3;
+			remainSeat[j] = r + Integer.valueOf(temp1);
 			j++;
+			
 		}
-		
-	}
-	
-	public void cal(List<ReserveInfo> list,int screen, int round) {
-		// list 순차검색해 있는 좌석을 새로운 배열에 입력
-		// 입력이 끝나면 좌석수 계산해서 입력
-		// 입력받는 상영관과 회차는 바로 저장: 1관 1회의 남은 좌석 저장하는 클래
-		// 좌석은 무조건 3자리씩 입력하고 읽어오
-		
-		this.screen = screen; this.round = round;
-		
-		String[] temp = new String[list.size()];
-		int j = 0;
-		
-		for(ReserveInfo i: list) {
-			temp[j] = i.reserve_seat;
-			j++;
-		}
-		
-		
+
 	}
 
 }

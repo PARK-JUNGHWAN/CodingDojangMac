@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -44,54 +45,91 @@ public class ReservationMovie extends JFrame {
 class ReservationMoviePan extends JPanel implements ActionListener {
 
 	String[] movie;
-	// db 무비 인포에서 영화이름 가져옴- 그냥 스크린정보에서 불러와도 들듯, 중복제거 set?
-	// 영화 넘버는 필요 없는듯? 스크린 정보에서도 영화명으로 통일 하는게 나을듯
+	// 스크린 인포에서 영화이름 가져와서 영화선택 라디오 버튼 생성, 메인 노스
 
 	String movieName;
 	ButtonGroup group;
 	JRadioButton[] button;
 	ReservationSeatBoard rsb;
-	List<ScreenInfo> list; 
-	int check = 0; String[] temp; int j;
+	List<ScreenInfo> list;
+	List<RemainSeat> rlist; // 좌석정보 클래스를 저장하는 리스트
+	List<MovieInfo> mlist;
+	int check = 0;
+	String[] temp;
+	int j;
 
 	ReservationMoviePan(ReservationSeatBoard rsb) {
 		this.rsb = rsb;
 		this.list = rsb.list;
 
 		movie = new String[list.size()];
-		
+
 		temp = new String[list.size()];
-		
-		for(int i=0;i<list.size();i++) {
+
+		for (int i = 0; i < list.size(); i++) {
 			temp[i] = new String();
 		}
 
+		rlist = new ArrayList<>(); // 순서대로 1관 1회부터 1-2,1-3 좌석정보 클래스 저장
+
+		mlist = new ArrayList<>(); // 무비인포 에서 영화목록 불러옴
+
+		CRUDprocess cp = new CRUDprocess();
+		mlist = cp.selectMovieInfo();
+
+		int j = 0;
+
+		for (MovieInfo i : mlist) {
+			movie[j] = i.MOVIE_NAME;
+			j++;
+		}
+
 		for (ScreenInfo i : list) {
-			
-			if(Integer.parseInt(i.screen_screen)==1) {
-				movie[0] = i.screen_mname;
+
+			if (Integer.parseInt(i.screen_screen) == 1) {
+//				movie[0] = i.screen_mname;
+				for (int t = 1; t < 6; t++) {
+					if (i.screen_round == t) {
+						rlist.add(new RemainSeat(1, t));
+					}
+				}
 			}
-			
-			if(Integer.parseInt(i.screen_screen)==2) {
-				movie[1] = i.screen_mname;
+
+			if (Integer.parseInt(i.screen_screen) == 2) {
+//				movie[1] = i.screen_mname;
+				for (int t = 1; t < 6; t++) {
+					if (i.screen_round == t) {
+						rlist.add(new RemainSeat(2, t));
+					}
+				}
 			}
-			
-			if(Integer.parseInt(i.screen_screen)==3) {
-				movie[2] = i.screen_mname;
+
+			if (Integer.parseInt(i.screen_screen) == 3) {
+//				movie[2] = i.screen_mname;
+				for (int t = 1; t < 6; t++) {
+					if (i.screen_round == t) {
+						rlist.add(new RemainSeat(3, t));
+					}
+				}
 			}
-			
-			if(Integer.parseInt(i.screen_screen)==4) {
-				movie[3] = i.screen_mname;
+
+			if (Integer.parseInt(i.screen_screen) == 4) {
+//				movie[3] = i.screen_mname;
+				for (int t = 1; t < 6; t++) {
+					if (i.screen_round == t) {
+						rlist.add(new RemainSeat(4, t));
+					}
+				}
 			}
-			
+
 		}
 
 		group = new ButtonGroup();
 		button = new JRadioButton[movie.length];
 
 		for (int i = 0; i < movie.length; i++) {
-			
-			if(movie[i] != null) {
+
+			if (movie[i] != null) {
 				button[i] = new JRadioButton();
 				button[i].setText(movie[i]);
 				button[i].addActionListener(this);
@@ -100,7 +138,7 @@ class ReservationMoviePan extends JPanel implements ActionListener {
 			}
 		}
 	}
-	
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -118,39 +156,37 @@ class ReservationMoviePan extends JPanel implements ActionListener {
 		return true;
 	}
 
-
-
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// 클릭하면 영화명 저장후 시간선택창 보이게
 		movieName = e.getActionCommand();
 
 		rsb.movieName = movieName;
-		
-		if(check>0) {
-			
-			for(ScreenInfo i:list) {
-				
+
+		if (check > 0) {
+
+			for (ScreenInfo i : list) {
+
 				movieName = i.screen_mname;
-							
-				if(movieName.equals(rsb.movieName)) { //초이스 영화명과 같으면
-					temp[j] = i.screen_begin+"";
+
+				if (movieName.equals(rsb.movieName)) { // 초이스 영화명과 같으면
+					temp[j] = i.screen_begin + "";
 					j++;
 				}
 			}
-			
-			for(int i=0;i<rsb.north.one.one.button.length;i++) {
-				rsb.north.one.one.button[i].setText(temp[i]);	
+
+			for (int i = 0; i < rsb.north.one.one.button.length; i++) {
+				rsb.north.one.one.button[i].setText(temp[i]);
 			}
-			
-			j=0;
-			
+
+			j = 0;
+
 		} else {
 			rsb.north.one = new ReservationSeatBoardPanSeatNumber(rsb);
 			rsb.north.add("Center", rsb.north.one);
 			rsb.setVisible(true);
 		}
-		
+
 		check++;
 	}
 

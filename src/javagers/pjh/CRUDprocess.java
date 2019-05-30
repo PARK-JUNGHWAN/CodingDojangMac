@@ -29,17 +29,29 @@ public class CRUDprocess {
 		SqlSession session = factory.openSession();
 		return session;
 	}
-	
-	public List<ScreenInfo> selectScreenInfo(){
-		
+
+	public List<MovieInfo> selectMovieInfo() {
+
 		SqlSession s = getSession();
-		
-		List<ScreenInfo> info = null;
-		
-		info = s.selectList("selectScreenInfo");
-		
+
+		List<MovieInfo> info = null;
+
+		info = s.selectList("selectMovieInfo");
+
 		return info;
-		
+
+	}
+
+	public List<ScreenInfo> selectScreenInfo() {
+
+		SqlSession s = getSession();
+
+		List<ScreenInfo> info = null;
+
+		info = s.selectList("selectScreenInfo");
+
+		return info;
+
 	}
 
 	public List<ReserveInfo> selectReserveInfo() {

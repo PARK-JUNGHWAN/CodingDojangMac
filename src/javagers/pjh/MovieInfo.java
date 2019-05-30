@@ -1,0 +1,9 @@
+package javagers.pjh;
+
+public class MovieInfo {
+
+	String MOVIE_NUM,MOVIE_NAME,MOVIE_GENRE,MOVIE_AGE,MOVIE_SCREEN,
+	MOVIE_IMAGE,MOVIE_INFOS,MOVIE_DIRECTOR,MOVIE_ACTOR;
+	
+	int MOVIE_PRICE;
+}

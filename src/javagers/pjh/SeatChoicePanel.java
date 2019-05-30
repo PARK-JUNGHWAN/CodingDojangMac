@@ -71,6 +71,9 @@ class SeatChoicePan1 extends JPanel implements ActionListener{//인원수를 받
 		this.rsb = rsb;
 		
 		this.setLayout(new GridLayout(10, 17));
+		
+		System.out.println("좌석 패널 생성");
+		
 		button = new JButton[170]; 
 		int j = 0;
 		x = new int[alph.length];

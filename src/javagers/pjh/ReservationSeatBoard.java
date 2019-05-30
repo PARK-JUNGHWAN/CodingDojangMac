@@ -214,13 +214,14 @@ class ReservationSeatBoardPanSeatNumberPan extends JPanel implements ActionListe
 			}
 		}
 		
-		number = new String[j];
+		number = new String[j]; // 리메인시트 정보를 삽입, 스크린과 회차 맞춰서
 		
 		button = new JButton[j];
 		label = new JLabel[j];
 
 		for (int i = 0; i < j; i++) {
 			button[i] = new JButton(str[i] + ""); // 시간 표시 버튼 생성 및 최초 입력
+			
 			label[i] = new JLabel(number[i] + ""); // 좌석 표시 라벨 생성
 			this.add(button[i]); button[i].addActionListener(this);
 			this.add(label[i]);

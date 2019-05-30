@@ -93,7 +93,7 @@ class ReservationTableSearchPanTwo extends JPanel {
 	
 	JTable table;
 	String[] columnName= {"예매 날짜","예매 번호","아이디","전화번호","영화명","상영관","회차","인원","금액","좌석"};
-	String[][] data = new String[1][10]; // db갯수로 행 크기 입력
+	String[][] data = new String[10][10]; // db갯수로 행 크기 입력
 	JPanel panel;
 	JScrollPane scroll;
 	List<ReserveInfo> info;
