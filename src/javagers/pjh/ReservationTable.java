@@ -119,8 +119,8 @@ class ReservationTableSearchPanTwo extends JPanel {
 			data[number][3] = p_num;
 			String title = i.reserve_title;
 			data[number][4] = title;
-			String screen = i.reserve_screen;
-			data[number][5] = screen;
+			int screen = i.reserve_screen;
+			data[number][5] = String.valueOf(screen);
 			int round = i.reserve_round;
 			data[number][6] = String.valueOf(round);
 			int people = i.reserve_people;

@@ -6,6 +6,7 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.swing.JButton;
@@ -32,7 +33,7 @@ public class SeatChoicePanel extends JPanel {
 
 }
 
-class SeatChoicePan0 extends JPanel {
+class SeatChoicePan0 extends JPanel {// 상영관과 회차 정보를 여기서 세팅, rsb.center.one
 
 	SeatChoicePan1 one;
 	SeatChoicePanel scp;
@@ -43,31 +44,35 @@ class SeatChoicePan0 extends JPanel {
 		this.rsb = rsb;
 		
 		this.setLayout(new BorderLayout());
+		
+		//
 
-		one = new SeatChoicePan1(rsb);
+//		one = new SeatChoicePan1(rsb, rsb.north.one.one.rlist.get(0).remainSeat); // 디서블 배열 입력, 0번 인덱스면 1관-1회, 스크린과 라운드 속성에 정보 있음
 
 		this.add("North", new JPanel().add(new JLabel(" \r\n ← \r\n EXIT")));
-		this.add("Center", one);
+//		this.add("Center", one);
 	}
 
 }
 
-class SeatChoicePan1 extends JPanel implements ActionListener{//인원수를 받아와야 함
+class SeatChoicePan1 extends JPanel implements ActionListener{//인원수를 받아와야 함, rsb.center.one.one
 	
 	ReservationSeatBoard rsb;
 	SeatChoicePanel scp;
 	String temp;
 	String[] alph = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J"};
 	int[] x; // 영문 배열 숫자로 치환 (a는0, b는 18...)
-
-	int[] disable; // 좌석 정보 db 중 영문자 치환 번호 + 좌석 번호 를 입력
+	
+	ButtonPointPan bpp, bpp1;
+	
+	String reserve="";
 
 	JButton[] button;
 	
 	int maxNumber; // 숫자는 인원수 받음
 	int number, price;
 
-	SeatChoicePan1(ReservationSeatBoard rsb) {
+	SeatChoicePan1(ReservationSeatBoard rsb, RemainSeat rs) {// 디서블할 인트배열 받아와야 함
 		this.rsb = rsb;
 		
 		this.setLayout(new GridLayout(10, 17));
@@ -111,7 +116,10 @@ class SeatChoicePan1 extends JPanel implements ActionListener{//인원수를 받
 			}
 		}
 
-		button[100].setEnabled(false); // for 문으로 button[disable[i]] false 처리
+//		button[100].setEnabled(false); // for 문으로 button[disable[i]] false 처리
+		for(int i:rs.remainSeat) {
+			button[i].setEnabled(false);
+		}
 
 	}
 
@@ -124,24 +132,28 @@ class SeatChoicePan1 extends JPanel implements ActionListener{//인원수를 받
 		// 선택한 좌석 정보를 배열에 저장, 취소 한것은 마이너스 메인의 seatList
 		
 		JButton bt = (JButton) e.getSource();
-		System.out.println(bt.getLocation());
-		int x = bt.getLocation().x; int y = bt.getLocation().y; // 52의 배수로 증가, x행 y열
+
+		int x = bt.getLocation().x; int y = bt.getLocation().y; // x행 69 y열 59 배수로 증가, 최초 0,0
 		
-		List<ButtonPoint> templist = new ArrayList<>(160);
+		List<ButtonPointPan> templist = new ArrayList<>(20);
 		
-		if(bt.getBackground() != Color.RED && number < maxNumber) { // 한번 클릭하면 빨간색
+		if(bt.getBackground() != Color.RED && number < maxNumber) { // 한번 클릭하면 빨간색, 예약 문자열 삽입
+			
+			System.out.println(bt.getLocation()+" 추가");
+			
 			bt.setBackground(Color.RED);
 			number++; 
 			rsb.south2.peopleText.setText(number+""); // 사우스 2번 패널 인원수 변경
 			price = number * 10000;
 			rsb.south2.priceText.setText(price+""); // 사우스 2번 패널 금액수 변경
-			
-			//사우스 2번 패널 리로드
-//			scp.rsb.south.add(scp.rsb.south2);
 
-			ButtonPoint temp = new ButtonPoint(bt.getLocation().x, bt.getLocation().y);
-			templist.add(temp);
+			bpp = new ButtonPointPan(bt.getLocation().x, bt.getLocation().y);
+			templist.add(bpp);
+			
 		} else if(bt.getBackground() == Color.RED) { // 또 클릭하면 원래색
+			
+			System.out.println(bt.getLocation()+" 해제");
+			
 			int i = bt.getLocation().y;
 			if(i<104) {
 				bt.setBackground(Color.ORANGE);
@@ -155,22 +167,45 @@ class SeatChoicePan1 extends JPanel implements ActionListener{//인원수를 받
 			price = number * 10000;
 			rsb.south2.priceText.setText(price+""); // 사우스 2번 패널 금액수 변경
 
-			ButtonPoint temp = new ButtonPoint(bt.getLocation().x, bt.getLocation().y);
-			templist.remove(temp);
+			bpp1 = new ButtonPointPan(bt.getLocation().x, bt.getLocation().y);
+			
+			for(Iterator<ButtonPointPan> it = templist.iterator();it.hasNext();) {
+				System.out.println("it");
+				ButtonPointPan j = it.next();
+				if(j.x == bpp1.x && j.y == bpp1.y) {
+					it.remove();
+					System.out.println("삭제");
+				}
+			}
+			
 		} else {
 			
 		}
 		
 		// templist 를 좌석 정보로 변경해 string list에 저장(null 없는 사이즈 만큼 list 생성)
+
+		for(ButtonPointPan i:templist) {
+			reserve = reserve + i.point;
+		}
 		
 	}
 }
 
 class ButtonPointPan {
-	int x; int y;
+	int x; int y; String point;
+	String[] alph = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J"};
 	
 	ButtonPointPan(int x, int y){
 		this.x = x;
 		this.y = y;
+		calPoint();
+	}
+	
+	public void calPoint() {
+		x = x/66; //숫자
+		y = y/59; //문자
+		
+		point = alph[y] + "" + x;
+		System.out.println(point);
 	}
 }

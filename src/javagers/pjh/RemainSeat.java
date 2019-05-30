@@ -7,24 +7,37 @@ public class RemainSeat {
 	// 이 클래스는 한 관의 한 회차의 남은 좌석 정보를 저장하는 클래
 	// RSB가 실행될 때 상영관 정보를 읽어와서 순서대로 이 클래스를 리스트에 저장
 	// 라벨에 한번에 다 입력해놓음 - 갱신은 예매현황을 새로 눌러야 가
-	
+
 	List<ReserveInfo> list;
 	int remainNumber, countNumber, screen, round;
 	int maxNumber = 160;
 	int[] remainSeat;
 	String str; // 리스트에 있는 좌석 정보를 저장할 문자열
-	
-	RemainSeat(int x, int y){
-		
+
+	RemainSeat(int x, int y) {
+
 		CRUDprocess cp = new CRUDprocess();
 		list = new ArrayList();
 		list = cp.selectReserveInfo();
-		
+
 		cal(x, y);
-		
-		countNumber = remainSeat.length;
+
+		countNumber = remainSeat.length/3;
 		remainNumber = maxNumber - countNumber;
-		
+
+	}
+
+	RemainSeat(ReserveInfo ri) {
+
+		CRUDprocess cp = new CRUDprocess();
+		list = new ArrayList();
+		list = cp.selectReserveInfo();
+
+		cal(ri.reserve_screen, ri.reserve_round);
+
+		countNumber = remainSeat.length/3;
+		remainNumber = maxNumber - countNumber;
+
 	}
 
 	public void cal(int screen, int round) {
@@ -41,56 +54,56 @@ public class RemainSeat {
 		for (ReserveInfo i : list) {
 			str = str + i.reserve_seat;
 		}
-		
+
 		remainSeat = new int[str.length()];
 
 		String temp = "";
 		String temp1 = "";
 		int j = 0;
 
-		for (int i = 0; i < str.length()/3; i++) {
-			temp = str.substring(3*i, 3*i+1);
-			int r=0;
-			
-			switch(temp) {
-			
-			case "A": 
-				r=1;
+		for (int i = 0; i < str.length() / 3; i++) {
+			temp = str.substring(3 * i, 3 * i + 1);
+			int r = 0;
+
+			switch (temp) {
+
+			case "A":
+				r = 1;
 				break;
-			case "B": 
-			
+			case "B":
+				r = 1+17*1;
 				break;
-			case "C": 
-				
+			case "C":
+				r = 1+17*2;
 				break;
-			case "D": 
-				
+			case "D":
+				r = 1+17*3;
 				break;
-			case "E": 
-				
+			case "E":
+				r = 1+17*4;
 				break;
-			case "F": 
-				
+			case "F":
+				r = 1+17*5;
 				break;
-			case "G": 
-				
+			case "G":
+				r = 1+17*6;
 				break;
-			case "H": 
-				
+			case "H":
+				r = 1+17*7;
 				break;
-			case "I": 
-				
+			case "I":
+				r = 1+17*8;
 				break;
-			case "J": 
-				
+			case "J":
+				r = 1+17*9;
 				break;
 			}
-			
-			temp1 = str.substring(1+i*3, 3+3*i);
-			
-			remainSeat[j] = r + Integer.valueOf(temp1);
+
+			temp1 = str.substring(1 + i * 3, 3 + 3 * i);
+
+			remainSeat[j] = r + Integer.valueOf(temp1); // 시트 위치 배열 숫자, 디서블할 인덱스
 			j++;
-			
+
 		}
 
 	}

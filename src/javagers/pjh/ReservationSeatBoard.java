@@ -20,6 +20,7 @@ import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.event.ListSelectionEvent;
@@ -77,7 +78,28 @@ public class ReservationSeatBoard extends JPanel {
 				// 영화명, 좌석 list, 시작시간, 상영관 - 클래스로 전송?
 				// 상태가 비회원일 경우에는 다이어로그 오픈 비회원 로그인
 				// 리저베이션컨펌 패널 오픈
-				System.out.println(rm.reservationMoviePan.movieName);
+				
+				int[] temp = new int[rm.rsb.south1.totalNumber];
+				int j=0; int t=0;
+				for(JButton i:rm.rsb.center.one.one.button) {
+					if(i.getBackground() == Color.RED) {
+						temp[j] = t;
+						j++;
+					}
+					t++;
+				}
+				
+				if(rm.rsb.south1.totalNumber > j) {
+					JOptionPane.showMessageDialog(null, "인원수가 맞지 않습니다.");
+				} else { // 성공시 넘어갈 작업 - 배열 안의 숫자로 좌석 넘버 계산해서 17나눠서 몫은 문자, 나머지는 숫자 
+					// 예약 성공화면 비저블 또는 생성? 나머지 다른 패널은 인비저블
+					// 좌석정보, 인원, 금액, 영화명 정보 필요 - 리저브인포 값으로 전달?
+					
+				}
+		
+				
+				
+				System.out.println(rm.reservationMoviePan.movieName+","+ j + rm.rsb.south1.totalNumber);
 			}
 			
 		});
@@ -143,18 +165,20 @@ class ReservationSeatBoardPanSeatNumber extends JPanel {// 노스 2번째 상단
 }
 
 class ReservationSeatBoardPanSeatNumberPan extends JPanel implements ActionListener{
-	// 노스 마지막, 상영시간 , 잔여좌석수 출력
+	// 노스 마지막, 상영시간 , 잔여좌석수 출력, rsb.north.one.one
 	ReservationSeatBoard rsb;
-	JButton[] button; 
+	JButton[] button; // 시간 선택 버튼
 	JLabel[] label; // 좌석 표시 라벨
 	String[] seatNumber; // 좌석 정보 저장 배열 
 	StringBuffer seat;
 	String[] str;
-	String[] number;
+	int[] number;
 	
-	int remainSeat, inSeat; int maxSeat = 160;
+	int remainSeat, countNumber;
 	
-	List<ScreenInfo> list; List<ReserveInfo> Relist;
+	List<ScreenInfo> list; 
+	List<RemainSeat> rlist; // 메인에서 저장한 잔여좌석 리스트
+	List<RemainSeat> tempRlist; // 버튼 생성시 추가한 잔여좌석 리스트
 	int j=0; int t=0;
 	String movieName;
 
@@ -179,42 +203,28 @@ class ReservationSeatBoardPanSeatNumberPan extends JPanel implements ActionListe
 		
 		this.rsb = rsb;
 		this.list = rsb.list;
+		this.rlist = rsb.rm.reservationMoviePan.rlist; //남은좌석 정보 리스트 추가
+		tempRlist = new ArrayList<>();
 		
 		// 잔여 좌석 계산
-		Relist = new ArrayList<>();
-		CRUDprocess cp = new CRUDprocess();
-		Relist = cp.selectReserveInfo();
-		//리스트에서 좌석 정보를 배열에 저장하는데 ,를 구분하며 null 값은 넣지 않는다.
-		seatNumber = new String[Relist.size()];
-		seat = new StringBuffer("");
-		for(ReserveInfo i:Relist) {
-			if(i != null) {
-				
-				if(i.reserve_seat.contains(",")) {
-					i.reserve_seat.replace(", ","");
-					seat.append(i.reserve_seat);
-					System.out.println("1");
-				} else {
-					seat.append(i.reserve_seat);
-				}
-			}
-		}
-		System.out.println(seat);
 		
+		//리스트에서 좌석 정보를 배열에 저장하는데 ,를 구분하며 null 값은 넣지 않는다.
 		
 		str = new String[list.size()];
+		number = new int[rsb.rm.reservationMoviePan.mlist.size()]; // 리메인시트 정보를 삽입, 스크린과 회차 맞춰서
 		
 		for(ScreenInfo i:list) {
 			
 			movieName = i.screen_mname;
 			
 			if(movieName.equals(rsb.movieName)) { //초이스 영화명과 같으면
-				str[j] =i.screen_begin;
+				str[j] =i.screen_begin; //str 배열에 시간을 저장
+				tempRlist.add(new RemainSeat(i.screen_screen, i.screen_round)); // 해당영화 첫번째 버튼 선택의 회차 정보와 좌석수를 저장해 리스트에 저장
+				number[j] = tempRlist.get(j).remainNumber;
 				j++;
 			}
 		}
 		
-		number = new String[j]; // 리메인시트 정보를 삽입, 스크린과 회차 맞춰서
 		
 		button = new JButton[j];
 		label = new JLabel[j];
@@ -222,15 +232,19 @@ class ReservationSeatBoardPanSeatNumberPan extends JPanel implements ActionListe
 		for (int i = 0; i < j; i++) {
 			button[i] = new JButton(str[i] + ""); // 시간 표시 버튼 생성 및 최초 입력
 			
-			label[i] = new JLabel(number[i] + ""); // 좌석 표시 라벨 생성
+			label[i] = new JLabel(number[i] + " / " + 160); // 좌석 표시 라벨 생성
 			this.add(button[i]); button[i].addActionListener(this);
 			this.add(label[i]);
 		}
 	}
 
 	@Override
-	public void actionPerformed(ActionEvent e) {//좌석 선택 패널 활성화
+	public void actionPerformed(ActionEvent e) {//좌석 선택 패널 활성화, 버튼별로 스크린, 회차 구분해서 시트초이스패널 생성
+		
+		rsb.center.one.one = new SeatChoicePan1(rsb, tempRlist.get(0));
+		rsb.add("Center", rsb.center.one.one);
 		rsb.center.setVisible(true);
+		
 	}
 }
 

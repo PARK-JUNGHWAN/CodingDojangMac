@@ -43,7 +43,7 @@ public class ReservationMovie extends JFrame {
 }
 
 class ReservationMoviePan extends JPanel implements ActionListener {
-
+	// rsb - rm.reservationMoviePan
 	String[] movie;
 	// 스크린 인포에서 영화이름 가져와서 영화선택 라디오 버튼 생성, 메인 노스
 
@@ -62,8 +62,6 @@ class ReservationMoviePan extends JPanel implements ActionListener {
 		this.rsb = rsb;
 		this.list = rsb.list;
 
-		movie = new String[list.size()];
-
 		temp = new String[list.size()];
 
 		for (int i = 0; i < list.size(); i++) {
@@ -76,6 +74,8 @@ class ReservationMoviePan extends JPanel implements ActionListener {
 
 		CRUDprocess cp = new CRUDprocess();
 		mlist = cp.selectMovieInfo();
+		
+		movie = new String[mlist.size()]; // 영화목록 배열 생성
 
 		int j = 0;
 
@@ -86,7 +86,7 @@ class ReservationMoviePan extends JPanel implements ActionListener {
 
 		for (ScreenInfo i : list) {
 
-			if (Integer.parseInt(i.screen_screen) == 1) {
+			if (i.screen_screen == 1) {
 //				movie[0] = i.screen_mname;
 				for (int t = 1; t < 6; t++) {
 					if (i.screen_round == t) {
@@ -95,7 +95,7 @@ class ReservationMoviePan extends JPanel implements ActionListener {
 				}
 			}
 
-			if (Integer.parseInt(i.screen_screen) == 2) {
+			if (i.screen_screen == 2) {
 //				movie[1] = i.screen_mname;
 				for (int t = 1; t < 6; t++) {
 					if (i.screen_round == t) {
@@ -104,7 +104,7 @@ class ReservationMoviePan extends JPanel implements ActionListener {
 				}
 			}
 
-			if (Integer.parseInt(i.screen_screen) == 3) {
+			if (i.screen_screen == 3) {
 //				movie[2] = i.screen_mname;
 				for (int t = 1; t < 6; t++) {
 					if (i.screen_round == t) {
@@ -113,7 +113,7 @@ class ReservationMoviePan extends JPanel implements ActionListener {
 				}
 			}
 
-			if (Integer.parseInt(i.screen_screen) == 4) {
+			if (i.screen_screen == 4) {
 //				movie[3] = i.screen_mname;
 				for (int t = 1; t < 6; t++) {
 					if (i.screen_round == t) {
@@ -176,7 +176,12 @@ class ReservationMoviePan extends JPanel implements ActionListener {
 			}
 
 			for (int i = 0; i < rsb.north.one.one.button.length; i++) {
-				rsb.north.one.one.button[i].setText(temp[i]);
+				if(temp[i] != null) {
+					rsb.north.one.one.button[i].setText(temp[i]);
+				} else {
+					rsb.north.one.one.button[i].setText("상영예정");
+				}
+//				rsb.north.one.one.button[i].setText(temp[i]);
 			}
 
 			j = 0;
