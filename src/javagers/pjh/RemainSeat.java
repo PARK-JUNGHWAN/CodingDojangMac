@@ -13,6 +13,7 @@ public class RemainSeat {
 	int maxNumber = 160;
 	int[] remainSeat;
 	String str; // 리스트에 있는 좌석 정보를 저장할 문자열
+	String reserve_time;
 
 	RemainSeat(int x, int y) {
 
@@ -22,7 +23,22 @@ public class RemainSeat {
 
 		cal(x, y);
 
-		countNumber = remainSeat.length/3;
+		countNumber = remainSeat.length / 3;
+		remainNumber = maxNumber - countNumber;
+
+	}
+
+	RemainSeat(int x, int y, String reserve_time) {
+
+		this.reserve_time = reserve_time;
+
+		CRUDprocess cp = new CRUDprocess();
+		list = new ArrayList();
+		list = cp.selectReserveInfo();
+
+		cal(x, y);
+
+		countNumber = remainSeat.length / 3;
 		remainNumber = maxNumber - countNumber;
 
 	}
@@ -35,8 +51,10 @@ public class RemainSeat {
 
 		cal(ri.reserve_screen, ri.reserve_round);
 
-		countNumber = remainSeat.length/3;
+		countNumber = remainSeat.length / 3;
 		remainNumber = maxNumber - countNumber;
+
+		this.reserve_time = ri.reserve_time;
 
 	}
 
@@ -71,31 +89,31 @@ public class RemainSeat {
 				r = 1;
 				break;
 			case "B":
-				r = 1+17*1;
+				r = 1 + 17 * 1;
 				break;
 			case "C":
-				r = 1+17*2;
+				r = 1 + 17 * 2;
 				break;
 			case "D":
-				r = 1+17*3;
+				r = 1 + 17 * 3;
 				break;
 			case "E":
-				r = 1+17*4;
+				r = 1 + 17 * 4;
 				break;
 			case "F":
-				r = 1+17*5;
+				r = 1 + 17 * 5;
 				break;
 			case "G":
-				r = 1+17*6;
+				r = 1 + 17 * 6;
 				break;
 			case "H":
-				r = 1+17*7;
+				r = 1 + 17 * 7;
 				break;
 			case "I":
-				r = 1+17*8;
+				r = 1 + 17 * 8;
 				break;
 			case "J":
-				r = 1+17*9;
+				r = 1 + 17 * 9;
 				break;
 			}
 

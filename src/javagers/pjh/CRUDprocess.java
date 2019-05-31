@@ -29,6 +29,11 @@ public class CRUDprocess {
 		SqlSession session = factory.openSession();
 		return session;
 	}
+	
+	public void insertReserveInfo(ReserveInfo ri) {
+		SqlSession s = getSession();
+		s.insert("loginmapper.insertReserveInfo",ri);
+	}
 
 	public List<MovieInfo> selectMovieInfo() {
 

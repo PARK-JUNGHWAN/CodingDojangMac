@@ -19,6 +19,7 @@ import javax.swing.JRadioButton;
 public class ReservationMovie extends JFrame {
 	ReservationMoviePan reservationMoviePan;
 	ReservationSeatBoard rsb;
+	ReservationTicket rt; //좌석선택 완료후 다음 눌렀을 때 오픈되야 함
 
 	ReservationMovie() {
 
@@ -29,6 +30,10 @@ public class ReservationMovie extends JFrame {
 		this.add("Center", rsb);
 
 		rsb.setVisible(false);
+		
+//	    rt = new ReservationTicket();
+//	    this.add("Center",rt);
+//	    rt.setVisible(false);
 
 		this.setBounds(0, 0, 1200, 800);
 		this.setVisible(true);

@@ -57,7 +57,7 @@ class SeatChoicePan0 extends JPanel {// 상영관과 회차 정보를 여기서 
 
 class SeatChoicePan1 extends JPanel implements ActionListener{//인원수를 받아와야 함, rsb.center.one.one
 	
-	ReservationSeatBoard rsb;
+	ReservationSeatBoard rsb; RemainSeat rs;
 	SeatChoicePanel scp;
 	String temp;
 	String[] alph = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J"};
@@ -73,7 +73,7 @@ class SeatChoicePan1 extends JPanel implements ActionListener{//인원수를 받
 	int number, price;
 
 	SeatChoicePan1(ReservationSeatBoard rsb, RemainSeat rs) {// 디서블할 인트배열 받아와야 함
-		this.rsb = rsb;
+		this.rsb = rsb; this.rs = rs;
 		
 		this.setLayout(new GridLayout(10, 17));
 		
@@ -164,7 +164,7 @@ class SeatChoicePan1 extends JPanel implements ActionListener{//인원수를 받
 			}
 			number--;
 			rsb.south2.peopleText.setText(number+""); // 사우스 2번 패널 인원수 변경
-			price = number * 10000;
+			price = number * 10000; // 기본금액 변경해야 함
 			rsb.south2.priceText.setText(price+""); // 사우스 2번 패널 금액수 변경
 
 			bpp1 = new ButtonPointPan(bt.getLocation().x, bt.getLocation().y);

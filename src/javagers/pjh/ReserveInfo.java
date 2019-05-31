@@ -25,5 +25,24 @@ public class ReserveInfo {
 		this.reserve_screen = reserve_screen;
 		this.reserve_round = reserve_round;
 	}
+	
+	ReserveInfo(String reserve_title, String reserve_seat, int reserve_screen, int reserve_round, int reserve_price, String reserve_time){
+		this.reserve_screen = reserve_screen;
+		this.reserve_round = reserve_round;
+		this.reserve_title = reserve_title;
+		this.reserve_seat = reserve_seat;
+		
+		this.reserve_date = null; //데이터 객체 받아와서 현재 시간으로 입력
+		
+//		String temp = String.valueOf(reserve_date) +"" + String.valueOf(number);
+//		this.reserve_rnum = number ; //예매번호 생성, 형식? 날짜 + 번호 순차 증감
+//		number ++;
+		
+		this.reserve_id = null; // 로그인 된 상황이면 현재 아이디 받아와서 입력
+		this.reserve_people = (reserve_seat.length()/3 != 0) ? reserve_seat.length()/3 :0 ;
+		
+		this.reserve_price = reserve_price;
+		this.reserve_time = reserve_time;
+	}
 
 }

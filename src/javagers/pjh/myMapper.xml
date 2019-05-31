@@ -16,6 +16,11 @@
 		select * from MOVIE_INFO
 	</select>
 	
+	<insert id="insertReserveInfo" parameterType="javagers.pjh.ReserveInfo">
+		insert into RESERVE_INFO values(#{reserve_date},#{reserve_rnum},#{reserve_num},#{reserve_title},#{reserve_screen},
+		#{reserve_round},#{reserve_people},#{reserve_price},#{reserve_seat},#{reserve_mnum},#{reserve_time},#{reserve_id})
+	</insert>
+	
 	
 </mapper>
 
