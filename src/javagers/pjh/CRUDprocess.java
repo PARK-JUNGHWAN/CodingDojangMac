@@ -30,9 +30,19 @@ public class CRUDprocess {
 		return session;
 	}
 	
-	public void insertReserveInfo(ReserveInfo ri) {
+	public int insertReserveInfo(ReserveInfobak ri) {
 		SqlSession s = getSession();
-		s.insert("loginmapper.insertReserveInfo",ri);
+		int result = 0;
+		try {
+			result = s.insert("insertReserveInfo",ri);
+			if(result > 0) s.commit();
+			else s.rollback();
+			return result;
+			
+		} finally {
+			s.close();
+		}
+		
 	}
 
 	public List<MovieInfo> selectMovieInfo() {

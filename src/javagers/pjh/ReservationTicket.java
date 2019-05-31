@@ -118,9 +118,16 @@ class ReservationButtonPan extends JPanel {// 완료 눌렀을 때 예약번호 
 				// 제출 버튼 누르면 커밋하고 완료로 라벨 하고 색 바꿈 
 
 				CRUDprocess cp = new CRUDprocess();
-				cp.insertReserveInfo(rtp.ri);
+				ReserveInfobak rib = new ReserveInfobak(rtp.ri);
+				int result = cp.insertReserveInfo(rib);
 				
-				JOptionPane.showMessageDialog(null, rtp.ri.reserve_rnum);
+//				if(result > 0) {
+//					System.out.println("sucess");
+//				} else {
+//					System.out.println("fail");
+//				}
+				
+				JOptionPane.showMessageDialog(null, "예약번호: "+rtp.ri.reserve_rnum+ " 예약이 완료되었습니다.");
 				
 				button.setText("완료"); button.setBackground(Color.BLUE);
 

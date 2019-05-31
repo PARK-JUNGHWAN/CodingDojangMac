@@ -109,7 +109,7 @@ class ReservationTableSearchPanTwo extends JPanel {
 		
 		for(ReserveInfo i: info) {
 			
-			Date date = i.reserve_date;
+			String date = i.reserve_date;
 			data[number][0] = String.valueOf(date);
 			int num = i.reserve_rnum;
 			data[number][1] = String.valueOf(num);
