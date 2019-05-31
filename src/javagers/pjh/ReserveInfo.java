@@ -34,9 +34,9 @@ public class ReserveInfo {
 		
 		this.reserve_date = null; //데이터 객체 받아와서 현재 시간으로 입력
 		
-//		String temp = String.valueOf(reserve_date) +"" + String.valueOf(number);
-//		this.reserve_rnum = number ; //예매번호 생성, 형식? 날짜 + 번호 순차 증감
-//		number ++;
+		double r = (int)(Math.random()*1000) + 10001;
+		String temp = String.valueOf(reserve_date) +""+ r;
+		this.reserve_rnum = Integer.valueOf(temp); //예매번호 생성, 형식? 날짜 + 번호 순차 증감
 		
 		this.reserve_id = null; // 로그인 된 상황이면 현재 아이디 받아와서 입력
 		this.reserve_people = (reserve_seat.length()/3 != 0) ? reserve_seat.length()/3 :0 ;

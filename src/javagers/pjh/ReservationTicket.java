@@ -9,6 +9,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
@@ -93,17 +94,35 @@ class ReservationButtonPan extends JPanel {// 완료 눌렀을 때 예약번호 
 		this.setLayout(new GridLayout(1, 2));
 
 		buttonTicket = new JButton("티켓출력");
+		buttonTicket.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// 제출 버튼 누르라고 요구, 
+				if(button.getText().equals("제출")) {
+					JOptionPane.showMessageDialog(null, "제출 버튼을 눌러 완료 하세요.");
+				} else {
+					JOptionPane.showMessageDialog(null, "프린터 연결상태를 확인하세요.");
+				}
+				
+			}
+			
+		});
 		buttonTicket.setBackground(Color.GREEN);
 
-		button = new JButton("완료");
+		button = new JButton("제출");
 		button.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// 완료 버튼을 누르면 커밋
+				// 제출 버튼 누르면 커밋하고 완료로 라벨 하고 색 바꿈 
 
 				CRUDprocess cp = new CRUDprocess();
-//				cp.insertReserveInfo(rtp.ri);
+				cp.insertReserveInfo(rtp.ri);
+				
+				JOptionPane.showMessageDialog(null, rtp.ri.reserve_rnum);
+				
+				button.setText("완료"); button.setBackground(Color.BLUE);
 
 				System.out.println("커밋성공");
 
