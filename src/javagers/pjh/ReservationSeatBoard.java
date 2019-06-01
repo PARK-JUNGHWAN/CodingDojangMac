@@ -61,9 +61,8 @@ public class ReservationSeatBoard extends JPanel {
 
 		north = new ReservationSeatBoardPanSeat(this);
 		west = new ReservationSeatBoardPanDate(this);
+
 		center = new SeatChoicePanel(this);
-		// center - 비활성화할 좌석 정보 받아야 함: where 영화넘버, 날짜, 회차, (좌석 정보 배열로)
-		// 최대 인원수
 
 		south = new JPanel();
 		south.setLayout(new GridLayout(1, 3));
@@ -84,46 +83,63 @@ public class ReservationSeatBoard extends JPanel {
 				int[] temp = new int[rm.rsb.south1.totalNumber];
 				int j = 0;
 				int t = 0;
-				for (JButton i : rm.rsb.center.one.one.button) { // 배열안에 디서블 숫자 입력
-					if (i.getBackground() == Color.RED) {
-						temp[j] = t;
-						j++;
+
+				if (rm.rsb.west.two.dayDate == 0) {
+					JOptionPane.showMessageDialog(null, "날짜를 선택하세요.");
+				} else {
+					try {
+
+						for (JButton i : rm.rsb.center.one.one.button) { // 배열안에 디서블 숫자 입력
+							if (i.getBackground() == Color.RED) {
+								temp[j] = t;
+								j++;
+							}
+							t++;
+						}
+
+						if (rm.rsb.south1.totalNumber > j || j == 0) {
+							JOptionPane.showMessageDialog(null, "인원수가 맞지 않거나 선택되지 않았습니다.");
+						} else { // 성공시 넘어갈 작업 - 배열 안의 숫자로 좌석 넘버 계산해서 17나눠서 몫은 문자, 나머지는 숫자
+							// 예약 성공화면 비저블 또는 생성? 나머지 다른 패널은 인비저블
+							// 좌석정보, 인원, 금액, 영화명 정보 필요 - 리저브인포 값으로 전달?
+							String str = "";
+							String[] alph = { "A", "B", "C", "D", "E", "F", "G", "H", "I", "J" };
+
+							for (int i = 0; i < temp.length; i++) {
+
+								int a = temp[i] / 17;
+								int b = temp[i] % 17;
+
+								if (temp[i] % 17 > 9) {
+									str = str + alph[a] + "" + b; // 좌석 정보 저장한 문자열
+								} else {
+									str = str + alph[a] + "0" + b; // 좌석 정보 저장한 문자열
+								}
+							}
+
+							rm.reservationMoviePan.setVisible(false);
+							rm.rsb.setVisible(false);
+
+//							ReserveInfo ri = new ReserveInfo(rm.rsb.movieName, str, rm.rsb.center.one.one.rs.screen,
+//									rm.rsb.center.one.one.rs.round, rm.rsb.center.one.one.price,
+//									rm.rsb.center.one.one.rs.reserve_time, rm.rsb.west.two.dayDate);
+							
+							ReserveInfo ri = new ReserveInfo(rm.rsb.north.one.one.tempRlist.get(rm.rsb.north.one.one.index),rm.rsb.movieName, 
+									rm.rsb.center.one.one.price, rm.rsb.west.two.dayDate, str);
+
+//							ri.reserve_date.setDate(rm.rsb.west.two.dayDate); // 선택한 날짜로 변경
+
+							rm.rt = new ReservationTicket(ri);
+							rm.add("Center", rm.rt);
+							rm.rt.setVisible(true);
+
+						}
+
+					} catch (Exception e1) {
+						JOptionPane.showMessageDialog(null, "상영시간과 좌석을 선택하세요.");
 					}
-					t++;
 				}
 
-				if (rm.rsb.south1.totalNumber > j) {
-					JOptionPane.showMessageDialog(null, "인원수가 맞지 않습니다.");
-				} else { // 성공시 넘어갈 작업 - 배열 안의 숫자로 좌석 넘버 계산해서 17나눠서 몫은 문자, 나머지는 숫자
-					// 예약 성공화면 비저블 또는 생성? 나머지 다른 패널은 인비저블
-					// 좌석정보, 인원, 금액, 영화명 정보 필요 - 리저브인포 값으로 전달?
-					String str = "";
-					String[] alph = { "A", "B", "C", "D", "E", "F", "G", "H", "I", "J" };
-
-					for (int i = 0; i < temp.length; i++) {
-
-						int a = temp[i] / 17;
-						int b = temp[i] % 17;
-
-						str = str + alph[a] + "" + b; // 좌석 정보 저장한 문자열
-						System.out.println(str);
-					}
-					
-					rm.reservationMoviePan.setVisible(false);
-					rm.rsb.setVisible(false);
-
-					ReserveInfo ri = new ReserveInfo(rm.rsb.movieName, str, rm.rsb.center.one.one.rs.screen,
-							rm.rsb.center.one.one.rs.round, rm.rsb.center.one.one.price,
-							rm.rsb.center.one.one.rs.reserve_time);
-//
-//					ReserveInfo ri = new ReserveInfo(1,1);
-					
-					rm.rt = new ReservationTicket(ri);
-					rm.add("Center", rm.rt);
-					rm.rt.setVisible(true);
-
-				}
-//				System.out.println(rm.reservationMoviePan.movieName+","+ j + rm.rsb.south1.totalNumber);
 			}
 
 		});
@@ -135,16 +151,6 @@ public class ReservationSeatBoard extends JPanel {
 		this.add("South", south);
 
 		center.setVisible(false); // 좌석 선택 감춤
-//		north.one.one.setVisible(false); // 시간 선택 감춤
-//		south2.setVisible(false);
-
-//		this.setBounds(0, 0, 1200, 800);
-//		this.setVisible(true);
-//		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	}
-
-	public static void main(String[] args) {
-//		new ReservationSeatBoard();
 
 	}
 
@@ -160,11 +166,10 @@ class ReservationSeatBoardPanSeat extends JPanel { // 노스 최상단, 메인
 
 		this.rsb = rsb;
 		this.setLayout(new BorderLayout());
+		one = new ReservationSeatBoardPanSeatNumber(rsb);
 
 		this.add("North", new JPanel().add(new JButton("시간")));
-
-//		one = new ReservationSeatBoardPanSeatNumber(rsb);
-//		this.add("Center", one);
+		this.add("Center",one);
 
 	}
 
@@ -174,24 +179,28 @@ class ReservationSeatBoardPanSeatNumber extends JPanel {// 노스 2번째 상단
 
 	ReservationSeatBoard rsb;
 	ReservationSeatBoardPanSeatNumberPan one;
+	JPanel label;
+	JLabel labeltxt;
 
 	ReservationSeatBoardPanSeatNumber(ReservationSeatBoard rsb) {
 
 		this.rsb = rsb;
-
-		one = new ReservationSeatBoardPanSeatNumberPan(rsb);
-
 		this.setLayout(new BorderLayout());
-		this.add("North", new JPanel().add(new JLabel(
-				"                                                                                                                          시간을 선택하시오.")));
-		this.add("Center", one);
+
+//		one = new ReservationSeatBoardPanSeatNumberPan(rsb);
+		label = new JPanel();
+		labeltxt = new JLabel("시간을 선택하시오.");
+
+		this.add("North", label.add(labeltxt));
+//		this.add("Center", one);
+
 	}
 }
 
 class ReservationSeatBoardPanSeatNumberPan extends JPanel implements ActionListener {
 	// 노스 마지막, 상영시간 , 잔여좌석수 출력, rsb.north.one.one
 	ReservationSeatBoard rsb;
-	JButton[] button; // 시간 선택 버튼
+	IndexJButton[] button; // 시간 선택 버튼
 	JLabel[] label; // 좌석 표시 라벨
 	String[] seatNumber; // 좌석 정보 저장 배열
 	StringBuffer seat;
@@ -203,8 +212,9 @@ class ReservationSeatBoardPanSeatNumberPan extends JPanel implements ActionListe
 	List<ScreenInfo> list;
 	List<RemainSeat> rlist; // 메인에서 저장한 잔여좌석 리스트
 	List<RemainSeat> tempRlist; // 버튼 생성시 추가한 잔여좌석 리스트
-	int j = 0;
+//	int j = 0;
 	int t = 0;
+	int index;
 	String movieName;
 
 	@Override
@@ -230,47 +240,69 @@ class ReservationSeatBoardPanSeatNumberPan extends JPanel implements ActionListe
 		this.list = rsb.list;
 		this.rlist = rsb.rm.reservationMoviePan.rlist; // 남은좌석 정보 리스트 추가
 		tempRlist = new ArrayList<>();
+		int j = 0; // 버튼 인덱스
+		movieName = rsb.movieName;
 
 		// 잔여 좌석 계산
 
-		// 리스트에서 좌석 정보를 배열에 저장하는데 ,를 구분하며 null 값은 넣지 않는다.
-
 		str = new String[list.size()];
-		number = new int[rsb.rm.reservationMoviePan.mlist.size()]; // 리메인시트 정보를 삽입, 스크린과 회차 맞춰서
+		number = new int[list.size()]; // 리메인시트 정보를 삽입, 스크린과 회차 맞춰서
 
 		for (ScreenInfo i : list) {
 
-			movieName = i.screen_mname;
+//			movieName = i.screen_mname;
 
-			if (movieName.equals(rsb.movieName)) { // 초이스 영화명과 같으면
+			if (movieName.equals(i.screen_mname)) { // 초이스 영화명과 같으면
 				str[j] = i.screen_begin; // str 배열에 시간을 저장
-				tempRlist.add(new RemainSeat(i.screen_screen, i.screen_round, i.screen_begin)); // 해당영화 첫번째 버튼 선택의 회차
-																								// 정보와 좌석수를 저장해 리스트에 저장
-				number[j] = tempRlist.get(j).remainNumber;
+				
+				for(RemainSeat r:rlist) { //rlist 중 스크린과 회차가 같으면 해당 남은 좌석수를 라벨에 입력
+					if(i.screen_screen==r.screen && i.screen_round == r.round) {
+						number[j] = r.remainNumber;
+						tempRlist.add(r); // 버튼 순서대로 임시리스트에 저장
+					}
+					
+				}
 				j++;
 			}
 		}
 
-		button = new JButton[j];
+		button = new IndexJButton[j];
 		label = new JLabel[j];
 
 		for (int i = 0; i < j; i++) {
-			button[i] = new JButton(str[i] + ""); // 시간 표시 버튼 생성 및 최초 입력
+			button[i] = new IndexJButton(str[i] + "", i); // 시간 표시 버튼 생성 및 최초 입력
 
 			label[i] = new JLabel(number[i] + " / " + 160); // 좌석 표시 라벨 생성
 			this.add(button[i]);
 			button[i].addActionListener(this);
 			this.add(label[i]);
 		}
+
+		j = 0; // 시간 순서 초기화
+
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {// 좌석 선택 패널 활성화, 버튼별로 스크린, 회차 구분해서 시트초이스패널 생성
 
-		rsb.center.one.one = new SeatChoicePan1(rsb, tempRlist.get(0));
-		rsb.add("Center", rsb.center.one.one);
-		rsb.center.setVisible(true);
-
+		System.out.println(((IndexJButton) e.getSource()).getIndex());
+		int j = ((IndexJButton) e.getSource()).getIndex(); //상영 시간 버튼 인덱스
+		
+		if(rsb.west.two.dayDate == 0) {
+			JOptionPane.showMessageDialog(null, "날짜를 먼저 선택해주세요.");
+		} else {
+			rsb.west.two.jlist.enable(false);
+			
+			rsb.center.one.one = new SeatChoicePan1(rsb, tempRlist.get(j)); // 좌석 선택 패널 생성
+			index = j; //임시리스트 인덱스 저장
+			rsb.add("Center", rsb.center.one.one);
+			rsb.center.setVisible(true);
+			// 영화 라디오 버튼 비활성화
+			for (int i = 0; i < rsb.rm.reservationMoviePan.button.length; i++) {
+				rsb.rm.reservationMoviePan.button[i].hide();
+			}
+			rsb.north.one.labeltxt.setText(rsb.west.two.dayDate+ "일 " +rsb.movieName + " 의 상영정보 입니다."); // 선택한 영화명 표시
+		}
 	}
 }
 
@@ -325,10 +357,11 @@ class ReservationSeatBoardPanday extends JPanel {// 웨스트 2번째
 	}
 }
 
-class ReservationSeatBoardPanTime extends JPanel implements ListSelectionListener {// 웨스트 센터
+class ReservationSeatBoardPanTime extends JPanel implements ListSelectionListener {// 웨스트 센터, rm.west.two
 
 	GregorianCalendar today;
 	ReservationSeatBoard rsb;
+	int dayDate;
 
 	JList jlist;
 	String[] str;
@@ -362,10 +395,23 @@ class ReservationSeatBoardPanTime extends JPanel implements ListSelectionListene
 	}
 
 	@Override
-	public void valueChanged(ListSelectionEvent e) {
+	public void valueChanged(ListSelectionEvent e) {// 날짜를 선택 했을 때 동작, 날짜를 date에 저장, 영화선택 라디오 디서블
 
 		if (!e.getValueIsAdjusting()) {
+
+			System.out.println(jlist.getSelectedValue() + "");
+
+			String temp = jlist.getSelectedValue().toString().substring(6);
+
+			dayDate = Integer.parseInt(temp);
+			
 			rsb.north.one.one.setVisible(true);
+
+//			System.out.println(temp);
+
+		} else {
+
+//			JOptionPane.showMessageDialog(this, "날짜를 선택하세요.");
 		}
 	}
 }
@@ -409,12 +455,19 @@ class ReservationSeatBoardPan2 extends JPanel implements ItemListener {// 사우
 		// 이걸 클릭하면 시트초이스 팬의 최대 클릭 인원수 변경
 		// 일반+청소년
 
-		adultNumber = Integer.parseInt(combo[0].getSelectedItem().toString());
-		youngNumber = Integer.parseInt(combo[1].getSelectedItem().toString());
+		try {
 
-		totalNumber = adultNumber + youngNumber;
+			adultNumber = Integer.parseInt(combo[0].getSelectedItem().toString());
+			youngNumber = Integer.parseInt(combo[1].getSelectedItem().toString());
 
-		rsb.center.one.one.maxNumber = totalNumber;
+			totalNumber = adultNumber + youngNumber;
+
+			rsb.center.one.one.maxNumber = totalNumber;
+
+		} catch (Exception e2) {
+			JOptionPane.showMessageDialog(this, "날짜와 시간을 먼저 선택하세요.");
+		}
+
 	}
 }
 

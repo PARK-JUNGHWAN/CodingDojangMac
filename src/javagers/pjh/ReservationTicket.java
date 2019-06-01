@@ -54,7 +54,7 @@ class ReservationTicketPan extends JPanel {
 		seat = new JLabel("좌    석 : ");
 		reservation = new JLabel("예약번호 : ");
 
-		movieText = new JLabel(ri.reserve_title);
+		movieText = new JLabel(ri.reserve_title); 
 		scrennText = new JLabel(ri.reserve_screen + " 관");
 		timeText = new JLabel(ri.reserve_time);
 		seatText = new JLabel(ri.reserve_seat);
@@ -100,9 +100,9 @@ class ReservationButtonPan extends JPanel {// 완료 눌렀을 때 예약번호 
 			public void actionPerformed(ActionEvent e) {
 				// 제출 버튼 누르라고 요구, 
 				if(button.getText().equals("제출")) {
-					JOptionPane.showMessageDialog(null, "제출 버튼을 눌러 완료 하세요.");
+					JOptionPane.showMessageDialog(rtp, "제출 버튼을 눌러 완료 하세요.");
 				} else {
-					JOptionPane.showMessageDialog(null, "프린터 연결상태를 확인하세요.");
+					JOptionPane.showMessageDialog(rtp, "프린터 연결상태를 확인하세요.");
 				}
 				
 			}
@@ -118,8 +118,7 @@ class ReservationButtonPan extends JPanel {// 완료 눌렀을 때 예약번호 
 				// 제출 버튼 누르면 커밋하고 완료로 라벨 하고 색 바꿈 
 
 				CRUDprocess cp = new CRUDprocess();
-				ReserveInfobak rib = new ReserveInfobak(rtp.ri);
-				int result = cp.insertReserveInfo(rib);
+				int result = cp.insertReserveInfo(rtp.ri);
 				
 //				if(result > 0) {
 //					System.out.println("sucess");
@@ -127,7 +126,7 @@ class ReservationButtonPan extends JPanel {// 완료 눌렀을 때 예약번호 
 //					System.out.println("fail");
 //				}
 				
-				JOptionPane.showMessageDialog(null, "예약번호: "+rtp.ri.reserve_rnum+ " 예약이 완료되었습니다.");
+				JOptionPane.showMessageDialog(rtp, "예약번호: "+rtp.ri.reserve_rnum+ " 예약이 완료되었습니다.");
 				
 				button.setText("완료"); button.setBackground(Color.BLUE);
 

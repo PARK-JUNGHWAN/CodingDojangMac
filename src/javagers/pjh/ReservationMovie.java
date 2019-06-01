@@ -19,7 +19,7 @@ import javax.swing.JRadioButton;
 public class ReservationMovie extends JFrame {
 	ReservationMoviePan reservationMoviePan;
 	ReservationSeatBoard rsb;
-	ReservationTicket rt; //좌석선택 완료후 다음 눌렀을 때 오픈되야 함
+	ReservationTicket rt; // 좌석선택 완료후 다음 눌렀을 때 오픈되야 함
 
 	ReservationMovie() {
 
@@ -30,7 +30,7 @@ public class ReservationMovie extends JFrame {
 		this.add("Center", rsb);
 
 		rsb.setVisible(false);
-		
+
 //	    rt = new ReservationTicket();
 //	    this.add("Center",rt);
 //	    rt.setVisible(false);
@@ -79,7 +79,7 @@ class ReservationMoviePan extends JPanel implements ActionListener {
 
 		CRUDprocess cp = new CRUDprocess();
 		mlist = cp.selectMovieInfo();
-		
+
 		movie = new String[mlist.size()]; // 영화목록 배열 생성
 
 		int j = 0;
@@ -92,39 +92,63 @@ class ReservationMoviePan extends JPanel implements ActionListener {
 		for (ScreenInfo i : list) {
 
 			if (i.screen_screen == 1) {
-//				movie[0] = i.screen_mname;
-				for (int t = 1; t < 6; t++) {
-					if (i.screen_round == t) {
-						rlist.add(new RemainSeat(1, t));
-					}
-				}
+
+				if (i.screen_round == 1)
+					rlist.add(new RemainSeat(1, 1, i.screen_begin));
+				if (i.screen_round == 2)
+					rlist.add(new RemainSeat(1, 2, i.screen_begin));
+				if (i.screen_round == 3)
+					rlist.add(new RemainSeat(1, 3, i.screen_begin));
+				if (i.screen_round == 4)
+					rlist.add(new RemainSeat(1, 4, i.screen_begin));
+				if (i.screen_round == 5)
+					rlist.add(new RemainSeat(1, 5, i.screen_begin));
+
 			}
 
 			if (i.screen_screen == 2) {
-//				movie[1] = i.screen_mname;
-				for (int t = 1; t < 6; t++) {
-					if (i.screen_round == t) {
-						rlist.add(new RemainSeat(2, t));
-					}
-				}
+
+				if (i.screen_round == 1)
+					rlist.add(new RemainSeat(2, 1, i.screen_begin));
+				if (i.screen_round == 2)
+					rlist.add(new RemainSeat(2, 2, i.screen_begin));
+				if (i.screen_round == 3)
+					rlist.add(new RemainSeat(2, 3, i.screen_begin));
+				if (i.screen_round == 4)
+					rlist.add(new RemainSeat(2, 4, i.screen_begin));
+				if (i.screen_round == 5)
+					rlist.add(new RemainSeat(2, 5, i.screen_begin));
+
 			}
 
 			if (i.screen_screen == 3) {
-//				movie[2] = i.screen_mname;
-				for (int t = 1; t < 6; t++) {
-					if (i.screen_round == t) {
-						rlist.add(new RemainSeat(3, t));
-					}
-				}
+
+				if (i.screen_round == 1)
+					rlist.add(new RemainSeat(3, 1, i.screen_begin));
+				if (i.screen_round == 2)
+					rlist.add(new RemainSeat(3, 2, i.screen_begin));
+				if (i.screen_round == 3)
+					rlist.add(new RemainSeat(3, 3, i.screen_begin));
+				if (i.screen_round == 4)
+					rlist.add(new RemainSeat(3, 4, i.screen_begin));
+				if (i.screen_round == 5)
+					rlist.add(new RemainSeat(3, 5, i.screen_begin));
+
 			}
 
 			if (i.screen_screen == 4) {
-//				movie[3] = i.screen_mname;
-				for (int t = 1; t < 6; t++) {
-					if (i.screen_round == t) {
-						rlist.add(new RemainSeat(4, t));
-					}
-				}
+
+				if (i.screen_round == 1)
+					rlist.add(new RemainSeat(4, 1, i.screen_begin));
+				if (i.screen_round == 2)
+					rlist.add(new RemainSeat(4, 2, i.screen_begin));
+				if (i.screen_round == 3)
+					rlist.add(new RemainSeat(4, 3, i.screen_begin));
+				if (i.screen_round == 4)
+					rlist.add(new RemainSeat(4, 4, i.screen_begin));
+				if (i.screen_round == 5)
+					rlist.add(new RemainSeat(4, 5, i.screen_begin));
+
 			}
 
 		}
@@ -162,41 +186,55 @@ class ReservationMoviePan extends JPanel implements ActionListener {
 	}
 
 	@Override
-	public void actionPerformed(ActionEvent e) {
-		// 클릭하면 영화명 저장후 시간선택창 보이게
+	public void actionPerformed(ActionEvent e) {// 영화명 클릭하면 상영시간 창 생성
+		// 클릭하면 영화명 저장, 날짜 창만 보이고 시간 선택창은 안보이게
+
 		movieName = e.getActionCommand();
 
 		rsb.movieName = movieName;
 
-		if (check > 0) {
-
-			for (ScreenInfo i : list) {
-
-				movieName = i.screen_mname;
-
-				if (movieName.equals(rsb.movieName)) { // 초이스 영화명과 같으면
-					temp[j] = i.screen_begin + "";
-					j++;
-				}
-			}
-
-			for (int i = 0; i < rsb.north.one.one.button.length; i++) {
-				if(temp[i] != null) {
-					rsb.north.one.one.button[i].setText(temp[i]);
-				} else {
-					rsb.north.one.one.button[i].setText("상영예정");
-				}
-//				rsb.north.one.one.button[i].setText(temp[i]);
-			}
-
-			j = 0;
-
-		} else {
-			rsb.north.one = new ReservationSeatBoardPanSeatNumber(rsb);
-			rsb.north.add("Center", rsb.north.one);
+		if (check < 1) {
+			// 시간선택 패널 생성
+			rsb.north.one.one = new ReservationSeatBoardPanSeatNumberPan(rsb);
+			rsb.north.one.add("Center", rsb.north.one.one);
 			rsb.setVisible(true);
+			rsb.north.one.one.setVisible(false);
+		} else {
+//			System.out.println(check+" 번 이상 클릭");
+
+			rsb.north.one.one.setVisible(false);
+			rsb.north.one.one = new ReservationSeatBoardPanSeatNumberPan(rsb);
+			rsb.north.one.add("Center", rsb.north.one.one);
+			rsb.setVisible(true);
+			rsb.north.one.one.setVisible(false);
 		}
 
+//		if (check > 0) {
+//
+//			for (ScreenInfo i : list) {
+//
+//				movieName = i.screen_mname;
+//
+//				if (movieName.equals(rsb.movieName)) { // 초이스 영화명과 같으면
+//					temp[j] = i.screen_begin + "";
+//					j++;
+//				}
+//			}
+//
+//			for (int i = 0; i < rsb.north.one.one.button.length; i++) {
+//				if(temp[i] != null) {
+//					rsb.north.one.one.button[i].setText(temp[i]);
+//				} else {
+//					rsb.north.one.one.button[i].setText("상영예정");
+//				}
+//			}
+//
+//			j = 0;
+//
+//		} else {
+//		
+//		}
+//
 		check++;
 	}
 

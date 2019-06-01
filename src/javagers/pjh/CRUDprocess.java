@@ -30,7 +30,7 @@ public class CRUDprocess {
 		return session;
 	}
 	
-	public int insertReserveInfo(ReserveInfobak ri) {
+	public int insertReserveInfo(ReserveInfo ri) {
 		SqlSession s = getSession();
 		int result = 0;
 		try {

@@ -33,7 +33,7 @@ public class SeatChoicePanel extends JPanel {
 
 }
 
-class SeatChoicePan0 extends JPanel {// 상영관과 회차 정보를 여기서 세팅, rsb.center.one
+class SeatChoicePan0 extends JPanel {
 
 	SeatChoicePan1 one;
 	SeatChoicePanel scp;
@@ -135,20 +135,20 @@ class SeatChoicePan1 extends JPanel implements ActionListener{//인원수를 받
 
 		int x = bt.getLocation().x; int y = bt.getLocation().y; // x행 69 y열 59 배수로 증가, 최초 0,0
 		
+		System.out.println(x+","+y);
+		
 		List<ButtonPointPan> templist = new ArrayList<>(20);
 		
 		if(bt.getBackground() != Color.RED && number < maxNumber) { // 한번 클릭하면 빨간색, 예약 문자열 삽입
 			
-			System.out.println(bt.getLocation()+" 추가");
-			
-			bt.setBackground(Color.RED);
+			bt.setBackground(Color.RED); 
 			number++; 
 			rsb.south2.peopleText.setText(number+""); // 사우스 2번 패널 인원수 변경
 			price = number * 10000;
 			rsb.south2.priceText.setText(price+""); // 사우스 2번 패널 금액수 변경
 
-			bpp = new ButtonPointPan(bt.getLocation().x, bt.getLocation().y);
-			templist.add(bpp);
+			bpp = new ButtonPointPan(bt.getLocation().x, bt.getLocation().y); //좌석 좌표 임시 저장
+			templist.add(bpp); // 좌석 좌표 배열 등록
 			
 		} else if(bt.getBackground() == Color.RED) { // 또 클릭하면 원래색
 			
@@ -169,7 +169,7 @@ class SeatChoicePan1 extends JPanel implements ActionListener{//인원수를 받
 
 			bpp1 = new ButtonPointPan(bt.getLocation().x, bt.getLocation().y);
 			
-			for(Iterator<ButtonPointPan> it = templist.iterator();it.hasNext();) {
+			for(Iterator<ButtonPointPan> it = templist.iterator();it.hasNext();) { //좌석 좌표 배열 삭제
 				System.out.println("it");
 				ButtonPointPan j = it.next();
 				if(j.x == bpp1.x && j.y == bpp1.y) {
@@ -202,10 +202,19 @@ class ButtonPointPan {
 	}
 	
 	public void calPoint() {
-		x = x/66; //숫자
+		if(x==69) {
+			x = 1;
+		} else {
+			x = (x-3)/66; //숫자
+		}
 		y = y/59; //문자
 		
-		point = alph[y] + "" + x;
+		if(x<10) {
+			point = alph[y]+"0"+x;
+		} else {
+			point = alph[y]+""+x;
+		}
+		
 		System.out.println(point);
 	}
 }

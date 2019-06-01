@@ -69,7 +69,10 @@ public class RemainSeat {
 
 		str = "";
 
-		for (ReserveInfo i : list) {
+		for (ReserveInfo i : list) { //예약정보에서 해당 스크린과 라운드에 해당하는 좌석만 입력
+			
+			if(screen == i.reserve_screen && round == i.reserve_round)
+			
 			str = str + i.reserve_seat;
 		}
 
@@ -79,41 +82,41 @@ public class RemainSeat {
 		String temp1 = "";
 		int j = 0;
 
-		for (int i = 0; i < str.length() / 3; i++) {
+		for (int i = 0; i < str.length() / 3; i++) { //리저브인포에서 좌석넘버 불러서 와서 해당 인덱스 버튼 비활성화
 			temp = str.substring(3 * i, 3 * i + 1);
 			int r = 0;
 
 			switch (temp) {
 
 			case "A":
-				r = 1;
+				r = 0;
 				break;
 			case "B":
-				r = 1 + 17 * 1;
+				r = 17 * 1;
 				break;
 			case "C":
-				r = 1 + 17 * 2;
+				r = 17 * 2;
 				break;
 			case "D":
-				r = 1 + 17 * 3;
+				r = 17 * 3;
 				break;
 			case "E":
-				r = 1 + 17 * 4;
+				r = 17 * 4;
 				break;
 			case "F":
-				r = 1 + 17 * 5;
+				r = 17 * 5;
 				break;
 			case "G":
-				r = 1 + 17 * 6;
+				r = 17 * 6;
 				break;
 			case "H":
-				r = 1 + 17 * 7;
+				r = 17 * 7;
 				break;
 			case "I":
-				r = 1 + 17 * 8;
+				r = 17 * 8;
 				break;
 			case "J":
-				r = 1 + 17 * 9;
+				r = 17 * 9;
 				break;
 			}
 
