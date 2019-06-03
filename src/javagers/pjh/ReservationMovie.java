@@ -1,5 +1,7 @@
 package javagers.pjh;
 
+import java.awt.Color;
+import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -10,6 +12,7 @@ import java.util.List;
 import java.util.Set;
 
 import javax.swing.ButtonGroup;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -20,22 +23,26 @@ public class ReservationMovie extends JFrame {
 	ReservationMoviePan reservationMoviePan;
 	ReservationSeatBoard rsb;
 	ReservationTicket rt; // 좌석선택 완료후 다음 눌렀을 때 오픈되야 함
-
+	BackgroundImage bi;
+	
 	ReservationMovie() {
 
 		rsb = new ReservationSeatBoard(this);
-		reservationMoviePan = new ReservationMoviePan(rsb);
+		reservationMoviePan = new ReservationMoviePan(rsb); reservationMoviePan.setBackground(new Color(98,2,3));
+		bi = new BackgroundImage(this);
 
 		this.add("North", reservationMoviePan);
-		this.add("Center", rsb);
+		this.add("Center",bi);
+//		this.add("Center", rsb);
 
-		rsb.setVisible(false);
+		bi.setVisible(true);
+//		rsb.setVisible(false);
 
 //	    rt = new ReservationTicket();
 //	    this.add("Center",rt);
 //	    rt.setVisible(false);
 
-		this.setBounds(0, 0, 1200, 800);
+		this.setBounds(0, 0, 1000, 700);
 		this.setVisible(true);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
@@ -65,7 +72,7 @@ class ReservationMoviePan extends JPanel implements ActionListener {
 
 	ReservationMoviePan(ReservationSeatBoard rsb) {
 		this.rsb = rsb;
-		this.list = rsb.list;
+		this.list = rsb.list;		
 
 		temp = new String[list.size()];
 
@@ -162,6 +169,8 @@ class ReservationMoviePan extends JPanel implements ActionListener {
 				button[i] = new JRadioButton();
 				button[i].setText(movie[i]);
 				button[i].addActionListener(this);
+				button[i].setBackground(new Color(98,2,3));
+				button[i].setForeground(Color.WHITE);
 				group.add(button[i]);
 				this.add(button[i]);
 			}
@@ -188,12 +197,19 @@ class ReservationMoviePan extends JPanel implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {// 영화명 클릭하면 상영시간 창 생성
 		// 클릭하면 영화명 저장, 날짜 창만 보이고 시간 선택창은 안보이게
-
+		
 		movieName = e.getActionCommand();
 
 		rsb.movieName = movieName;
 
 		if (check < 1) {
+			
+
+			rsb.rm.add("Center", rsb);
+
+			rsb.rm.bi.setVisible(false);
+			rsb.setVisible(true);
+			
 			// 시간선택 패널 생성
 			rsb.north.one.one = new ReservationSeatBoardPanSeatNumberPan(rsb);
 			rsb.north.one.add("Center", rsb.north.one.one);
@@ -201,7 +217,7 @@ class ReservationMoviePan extends JPanel implements ActionListener {
 			rsb.north.one.one.setVisible(false);
 		} else {
 //			System.out.println(check+" 번 이상 클릭");
-
+			
 			rsb.north.one.one.setVisible(false);
 			rsb.north.one.one = new ReservationSeatBoardPanSeatNumberPan(rsb);
 			rsb.north.one.add("Center", rsb.north.one.one);
@@ -238,4 +254,32 @@ class ReservationMoviePan extends JPanel implements ActionListener {
 		check++;
 	}
 
+}
+
+class BackgroundImage extends JPanel {
+	
+	ImageIcon icon;
+	ReservationMovie rm;
+	
+	BackgroundImage(ReservationMovie rm) {
+		this.rm = rm;
+		
+		icon = new ImageIcon("src\\javagers\\image\\mainImage.jpg");
+		
+	}
+	
+	public void paintComponent(Graphics g) {
+        //  Approach 1: Dispaly image at at full size
+        g.drawImage(icon.getImage(), 0, 0, null);
+        
+        //  Approach 2: Scale image to size of component
+        // Dimension d = getSize();
+        // g.drawImage(icon.getImage(), 0, 0, d.width, d.height, null);
+        // Approach 3: Fix the image position in the scroll pane
+        // Point p = scrollPane.getViewport().getViewPosition();
+        // g.drawImage(icon.getImage(), p.x, p.y, null);
+        setOpaque(false);
+        super.paintComponent(g);
+    }
+	
 }

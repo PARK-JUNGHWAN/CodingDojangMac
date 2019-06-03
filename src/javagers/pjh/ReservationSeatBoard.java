@@ -159,16 +159,18 @@ public class ReservationSeatBoard extends JPanel {
 class ReservationSeatBoardPanSeat extends JPanel { // 노스 최상단, 메인
 
 	ReservationSeatBoard rsb;
-
 	ReservationSeatBoardPanSeatNumber one;
+//	JButton time;
 
 	ReservationSeatBoardPanSeat(ReservationSeatBoard rsb) {
 
 		this.rsb = rsb;
 		this.setLayout(new BorderLayout());
 		one = new ReservationSeatBoardPanSeatNumber(rsb);
+		
+//		time = new JButton("시간"); time.setEnabled(false); time.setForeground(Color.BLUE);
 
-		this.add("North", new JPanel().add(new JButton("시간")));
+//		this.add("North", new JPanel().add(time));
 		this.add("Center",one);
 
 	}
@@ -180,7 +182,7 @@ class ReservationSeatBoardPanSeatNumber extends JPanel {// 노스 2번째 상단
 	ReservationSeatBoard rsb;
 	ReservationSeatBoardPanSeatNumberPan one;
 	JPanel label;
-	JLabel labeltxt;
+	JButton labeltxt;
 
 	ReservationSeatBoardPanSeatNumber(ReservationSeatBoard rsb) {
 
@@ -189,7 +191,7 @@ class ReservationSeatBoardPanSeatNumber extends JPanel {// 노스 2번째 상단
 
 //		one = new ReservationSeatBoardPanSeatNumberPan(rsb);
 		label = new JPanel();
-		labeltxt = new JLabel("시간을 선택하시오.");
+		labeltxt = new JButton("날짜 및 시간을 선택해주세요."); labeltxt.setEnabled(false);
 
 		this.add("North", label.add(labeltxt));
 //		this.add("Center", one);
@@ -301,7 +303,7 @@ class ReservationSeatBoardPanSeatNumberPan extends JPanel implements ActionListe
 			for (int i = 0; i < rsb.rm.reservationMoviePan.button.length; i++) {
 				rsb.rm.reservationMoviePan.button[i].hide();
 			}
-			rsb.north.one.labeltxt.setText(rsb.west.two.dayDate+ "일 " +rsb.movieName + " 의 상영정보 입니다."); // 선택한 영화명 표시
+			rsb.north.one.labeltxt.setText(rsb.west.two.dayDate+ "일 " +rsb.movieName + " 의 상영정보 입니다. 관람하실 인원수 및 좌석을 선택해주세요."); // 선택한 영화명 표시
 		}
 	}
 }
@@ -454,6 +456,7 @@ class ReservationSeatBoardPan2 extends JPanel implements ItemListener {// 사우
 	public void itemStateChanged(ItemEvent e) {
 		// 이걸 클릭하면 시트초이스 팬의 최대 클릭 인원수 변경
 		// 일반+청소년
+		// 무비네임 where 무비인포 테이블의 무비 에이지 스트링을 호출해 해당 스트링의 2번째 글자만 읽어서 그 9이상이면 청소년 클릭 제한 걸음
 
 		try {
 
@@ -465,7 +468,7 @@ class ReservationSeatBoardPan2 extends JPanel implements ItemListener {// 사우
 			rsb.center.one.one.maxNumber = totalNumber;
 
 		} catch (Exception e2) {
-			JOptionPane.showMessageDialog(this, "날짜와 시간을 먼저 선택하세요.");
+			JOptionPane.showMessageDialog(null, "날짜와 시간을 먼저 선택하세요.");
 		}
 
 	}
