@@ -16,29 +16,30 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-public class ReservationBoard extends JFrame {
+public class ReservationBoard extends JPanel {
 
 	ReservationBoardPan1 reservationBoardPan1;
 	ReservationBoardPan2 reservationBoardPan2;
 
-	ReservationBoard() {
+	public ReservationBoard() {
 
 		reservationBoardPan1 = new ReservationBoardPan1(this);
 		reservationBoardPan1.setBackground(new Color(98, 2, 0));
 		reservationBoardPan2 = new ReservationBoardPan2();
-
+		
+		this.setLayout(new BorderLayout());
 		this.add("North", reservationBoardPan1);
 		this.add("Center", reservationBoardPan2);
 
 		reservationBoardPan2.setVisible(false);
 
-		this.setBounds(0, 0, 1200, 800);
+//		this.setBounds(0, 0, 1200, 800);
 		this.setVisible(true);
-		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 
 	public static void main(String[] args) {
-		new ReservationBoard();
+//		new ReservationBoard();
 
 	}
 
@@ -176,7 +177,15 @@ class ReservationBoardPan3 extends JPanel {
 
 		this.r2 = r2;
 		this.setLayout(new BorderLayout());
-		str = (screen+1) + " 관:  " + r2.list.get(screen).screen_mname; 
+		
+		String temp="";
+		for(ScreenInfo i:r2.list) {
+			if(screen == i.screen_screen) {
+				temp = i.screen_mname;
+			}
+		}
+		
+		str = (screen+1) + " 관:  " + temp; 
 		label = new JLabel(str);
 		this.add("North", new JPanel().add(label));
 		this.add("Center", new ReservationBoardPan4(screen+1));

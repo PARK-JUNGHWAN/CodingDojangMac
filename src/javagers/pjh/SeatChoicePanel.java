@@ -20,12 +20,13 @@ public class SeatChoicePanel extends JPanel {
 	ReservationSeatBoard rsb;
 	int movie_price;
 
-	SeatChoicePanel(ReservationSeatBoard rsb) {
+	public SeatChoicePanel(ReservationSeatBoard rsb) {
 		rsb = rsb;
 		this.setLayout(new BorderLayout());
 
 		one = new SeatChoicePan0(rsb);
-
+		
+		this.setLayout(new BorderLayout());
 		this.add("North", new JPanel().add(new JButton("SCREEN")));
 		this.add("Center", one);
 

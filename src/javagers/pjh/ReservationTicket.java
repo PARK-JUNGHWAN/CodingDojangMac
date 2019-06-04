@@ -39,7 +39,7 @@ public class ReservationTicket extends JPanel {
 class ReservationTicketPan extends JPanel {
 	JLabel warning, movie, screen, time, seat, movieText, scrennText, timeText, seatText, reservation,
 			reservationNumber;
-	ReserveInfo ri;
+	ReserveInfo ri; String num;
 
 	ReservationTicketPan(ReserveInfo ri) {
 
@@ -54,12 +54,13 @@ class ReservationTicketPan extends JPanel {
 		seat = new JLabel("좌    석 : ");
 		reservation = new JLabel("예약번호 : ");
 
-		movieText = new JLabel(ri.reserve_title); 
+		movieText = new JLabel(ri.reserve_title);
 		scrennText = new JLabel(ri.reserve_screen + " 관");
 		timeText = new JLabel(ri.reserve_time);
 		seatText = new JLabel(ri.reserve_seat);
 		reservationNumber = new JLabel(String.valueOf(ri.reserve_rnum));
-
+		this.num = ri.reserve_num;
+		
 		this.add(new JPanel());
 		this.add(warning);
 		this.add(new JPanel());
@@ -86,10 +87,12 @@ class ReservationButtonPan extends JPanel {// 완료 눌렀을 때 예약번호 
 
 	JButton button, buttonTicket;
 	ReservationTicketPan rtp;
+	String num;
 
 	ReservationButtonPan(ReservationTicketPan rtp) {
 
 		this.rtp = rtp;
+		this.num = rtp.num;
 
 		this.setLayout(new GridLayout(1, 2));
 
@@ -98,15 +101,15 @@ class ReservationButtonPan extends JPanel {// 완료 눌렀을 때 예약번호 
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// 제출 버튼 누르라고 요구, 
-				if(button.getText().equals("제출")) {
+				// 제출 버튼 누르라고 요구,
+				if (button.getText().equals("제출")) {
 					JOptionPane.showMessageDialog(rtp, "제출 버튼을 눌러 완료 하세요.");
 				} else {
 					JOptionPane.showMessageDialog(rtp, "프린터 연결상태를 확인하세요.");
 				}
-				
+
 			}
-			
+
 		});
 		buttonTicket.setBackground(Color.GREEN);
 
@@ -115,20 +118,28 @@ class ReservationButtonPan extends JPanel {// 완료 눌렀을 때 예약번호 
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// 제출 버튼 누르면 커밋하고 완료로 라벨 하고 색 바꿈 
+				// 제출 버튼 누르면 커밋하고 완료로 라벨 하고 색 바꿈
+
+				if (num.equals("0")) {
+					num = JOptionPane.showInputDialog(null, "전화번호를 입력하세요.", "전화번호 입력", JOptionPane.OK_CANCEL_OPTION);
+					rtp.ri.reserve_num = num;
+				} else {
+
+					JOptionPane.showMessageDialog(rtp, "예약번호: " + rtp.ri.reserve_rnum + " 예약이 완료되었습니다.");
+					button.setText("완료");
+					button.setBackground(Color.BLUE);
+				}
 
 				CRUDprocess cp = new CRUDprocess();
 				int result = cp.insertReserveInfo(rtp.ri);
-				
+
 //				if(result > 0) {
 //					System.out.println("sucess");
 //				} else {
 //					System.out.println("fail");
 //				}
-				
-				JOptionPane.showMessageDialog(rtp, "예약번호: "+rtp.ri.reserve_rnum+ " 예약이 완료되었습니다.");
-				
-				button.setText("완료"); button.setBackground(Color.BLUE);
+
+//				JOptionPane.showMessageDialog(rtp, "예약번호: "+rtp.ri.reserve_rnum+ " 예약이 완료되었습니다.");
 
 				System.out.println("커밋성공");
 

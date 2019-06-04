@@ -1,5 +1,6 @@
 package javagers.pjh;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
@@ -19,18 +20,19 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 
-public class ReservationMovie extends JFrame {
+public class ReservationMovie extends JPanel {
 	ReservationMoviePan reservationMoviePan;
 	ReservationSeatBoard rsb;
 	ReservationTicket rt; // 좌석선택 완료후 다음 눌렀을 때 오픈되야 함
 	BackgroundImage bi;
 	
-	ReservationMovie() {
+	public ReservationMovie() {
 
 		rsb = new ReservationSeatBoard(this);
 		reservationMoviePan = new ReservationMoviePan(rsb); reservationMoviePan.setBackground(new Color(98,2,3));
 		bi = new BackgroundImage(this);
-
+		
+		this.setLayout(new BorderLayout());
 		this.add("North", reservationMoviePan);
 		this.add("Center",bi);
 //		this.add("Center", rsb);
@@ -42,13 +44,13 @@ public class ReservationMovie extends JFrame {
 //	    this.add("Center",rt);
 //	    rt.setVisible(false);
 
-		this.setBounds(0, 0, 1000, 700);
+//		this.setBounds(0, 0, 1000, 700);
 		this.setVisible(true);
-		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 
 	public static void main(String[] args) {
-		new ReservationMovie();
+//		new ReservationMovie();
 
 	}
 

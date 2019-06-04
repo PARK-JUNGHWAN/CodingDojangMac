@@ -3,8 +3,12 @@ package javagers.pjh;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import javagers.jjy.LoginSystem;
+
 public class ReserveInfo {
 
+	LoginSystem ls;
+	
 	Date reserve_date;
 	int reserve_rnum;
 	String reserve_id;
@@ -24,12 +28,14 @@ public class ReserveInfo {
 
 	ReserveInfo(RemainSeat rs, String movie_name, int price, int dayDate, String seat) {
 		
+		this.ls = ls;
 		this.reserve_screen = rs.screen;
 		this.reserve_round = rs.round;
 		this.reserve_title = movie_name;
 		this.reserve_seat = seat;
 		this.reserve_time = rs.reserve_time;
 		this.reserve_price = price;
+		this.reserve_id = "a";
 		
 		Date today = new Date();
 		this.reserve_date = today;
@@ -44,7 +50,7 @@ public class ReserveInfo {
 		System.out.println(temp);
 		this.reserve_rnum = Integer.valueOf(temp); // 예약번호 문자열로 바꿔야 할듯, '-'등 구분 문자열을 못들어감, 날짜도 안들어감
 
-		this.reserve_id = "a"; // 로그인 된 상황이면 현재 아이디 받아와서 입력
+//		this.reserve_id = "a"; // 로그인 된 상황이면 현재 아이디 받아와서 입력
 		this.reserve_num = "0"; // 전화번호는 입력은 비회원 로그인 시 받아옴, null 값은 업로드 안됨
 		
 		this.reserve_people = (reserve_seat.length() / 3 != 0) ? reserve_seat.length() / 3 : 0;
